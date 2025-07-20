@@ -41,13 +41,13 @@ java {
 }
 
 tasks.withType<Jar> {
-    archiveFileName.set("your-plugin.jar")
+    archiveFileName.set("jolt-physics-plugin.jar")
 
     // Otherwise you'll get a "No main manifest attribute" error
     manifest {
-        attributes["Plugin-Class"]= "com.github.your_name.your_plugin.YourPlugin"
-        attributes["Plugin-Id"] = "your-plugin"
-        attributes["Plugin-Provider"] = "Your Name"
+        attributes["Plugin-Class"]= "com.github.dgzt.mundus.plugin.joltphysics.plugin.JoltPhysicsPlugin"
+        attributes["Plugin-Id"] = "jolt-physics-plugin"
+        attributes["Plugin-Provider"] = "Tibor Zsuro (Dgzt)"
         attributes["Plugin-Version"] = "0.0.1"
     }
 }

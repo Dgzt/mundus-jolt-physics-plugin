@@ -1,7 +1,9 @@
 package com.github.dgzt.mundus.plugin.joltphysics.runtime;
 
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.Layers;
+import com.github.xpenatan.jparser.loader.JParserLibraryLoaderListener;
 import jolt.Jolt;
+import jolt.JoltLoader;
 import jolt.core.Factory;
 import jolt.core.JobSystemThreadPool;
 import jolt.core.TempAllocatorImpl;
@@ -69,8 +71,13 @@ public class JoltPhysicsPlugin {
         physicsSystem.Init(mMaxBodies, cNumBodyMutexes, mMaxBodyPairs, mMaxContactConstraints, mBroadPhaseLayerInterface, mObjectVsBroadPhaseLayerFilter, mObjectLayerPairFilter);
     }
 
-    public static void init() {
-        INSTANCE = new JoltPhysicsPlugin();
+    public static void init(final JParserLibraryLoaderListener listener) {
+        JoltLoader.init((joltSuccess, exception) -> {
+            if (joltSuccess) {
+                INSTANCE = new JoltPhysicsPlugin();
+            }
+            listener.onLoad(joltSuccess, exception);
+        });
     }
 
     public static PhysicsSystem getPhysicsSystem() {

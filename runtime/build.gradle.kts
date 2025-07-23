@@ -29,8 +29,8 @@ dependencies {
     api("com.badlogicgames.gdx:gdx:${project.properties["libgdxVersion"]}")
     api("com.github.jamestkhan.mundus:commons:${project.properties["mundusVersion"]}")
 
-    implementation("com.github.xpenatan.gdx-jolt:jolt-core:${project.properties["gdxJoltVersion"]}")
-    implementation("com.github.xpenatan.gdx-jolt:jolt-gdx:${project.properties["gdxJoltVersion"]}")
+    api("com.github.xpenatan.gdx-jolt:jolt-core:${project.properties["gdxJoltVersion"]}")
+    api("com.github.xpenatan.gdx-jolt:jolt-gdx:${project.properties["gdxJoltVersion"]}")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

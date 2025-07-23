@@ -1,5 +1,7 @@
 package com.github.dgzt.mundus.plugin.joltphysics.runtime.manager;
 
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.Layers;
 import com.mbrlabs.mundus.commons.scene3d.components.TerrainComponent;
@@ -14,14 +16,25 @@ import jolt.math.Vec3;
 import jolt.physics.body.Body;
 import jolt.physics.body.BodyCreationSettings;
 import jolt.physics.body.BodyInterface;
+import jolt.physics.collision.shape.BoxShape;
 import jolt.physics.collision.shape.MeshShapeSettings;
 
 public class BodyManager {
 
+    private final float boxRestitution = 0.8f;
+
     private final BodyInterface bodyInterface;
+    private final Vec3 tempVec3;
+    private final Quat tempQuat;
+    private final Quaternion tempQuaternion;
+    private final Matrix4 tempRotationMatrix;
 
     public BodyManager(final BodyInterface bodyInterface) {
         this.bodyInterface = bodyInterface;
+        tempVec3 = Jolt.New_Vec3();
+        tempQuat = new Quat();
+        tempQuaternion = new Quaternion();
+        tempRotationMatrix = new Matrix4();
     }
 
     public Body createTerrainBody(final TerrainComponent terrainComponent) {
@@ -67,5 +80,49 @@ public class BodyManager {
         bodyCreationSettings.dispose();
 
         return terrainBody;
+    }
+
+    public Body createBoxBody(final float x, final float y, final float z,
+                              final float width, final float height, final float depth,
+                              final float axiX, final float axiY, final float axiZ,
+                              final float mass) {
+        tempVec3.Set(width / 2f, height / 2f, depth / 2f);
+        final var bodyShape = new BoxShape(tempVec3);
+
+        tempRotationMatrix.idt();
+        tempRotationMatrix.rotate(Vector3.X, axiX);
+        tempRotationMatrix.rotate(Vector3.Y, axiY);
+        tempRotationMatrix.rotate(Vector3.Z, axiZ);
+        tempRotationMatrix.getRotation(tempQuaternion);
+
+        tempVec3.Set(x, y, z);
+        tempQuat.Set(tempQuaternion.x, tempQuaternion.y, tempQuaternion.z, tempQuaternion.w);
+
+        final var massProperties = bodyShape.GetMassProperties();
+        EMotionType motionType;
+        int layer;
+        if (mass > 0f) {
+            massProperties.set_mMass(mass);
+            motionType = EMotionType.Dynamic;
+            layer = Layers.MOVING;
+        } else {
+            motionType = EMotionType.Static;
+            layer = Layers.NON_MOVING;
+        }
+
+        final var bodySettings = Jolt.New_BodyCreationSettings(bodyShape, tempVec3, tempQuat, motionType, layer);
+        bodySettings.set_mMassPropertiesOverride(massProperties);
+        bodySettings.set_mRestitution(boxRestitution);
+        final var body = bodyInterface.CreateBody(bodySettings);
+        bodySettings.dispose();
+
+        bodyInterface.AddBody(body.GetID(), EActivation.Activate);
+
+        return body;
+    }
+
+    public void dispose() {
+        tempVec3.dispose();
+        tempQuat.dispose();
     }
 }

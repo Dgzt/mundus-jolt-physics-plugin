@@ -113,5 +113,7 @@ public class JoltPhysicsPlugin {
         Factory.set_sInstance(null);
         INSTANCE.factory.dispose();
         Jolt.UnregisterTypes();
+
+        INSTANCE.bodyManager.dispose();
     }
 }

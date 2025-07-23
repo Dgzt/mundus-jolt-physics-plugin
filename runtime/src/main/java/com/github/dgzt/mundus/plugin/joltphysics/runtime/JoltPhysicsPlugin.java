@@ -1,6 +1,8 @@
 package com.github.dgzt.mundus.plugin.joltphysics.runtime;
 
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.Layers;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.manager.BodyManager;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.manager.ComponentManager;
 import com.github.xpenatan.jparser.loader.JParserLibraryLoaderListener;
 import jolt.Jolt;
 import jolt.JoltLoader;
@@ -26,6 +28,9 @@ public class JoltPhysicsPlugin {
     private final BroadPhaseLayerInterfaceTable mBroadPhaseLayerInterface;
     private TempAllocatorImpl mTempAllocator;
     private JobSystemThreadPool mJobSystem;
+
+    private final BodyManager bodyManager;
+    private final ComponentManager componentManager;
 
     private JoltPhysicsPlugin() {
         Jolt.Init();
@@ -69,6 +74,9 @@ public class JoltPhysicsPlugin {
         Jolt.RegisterTypes();
         physicsSystem = Jolt.New_PhysicsSystem();
         physicsSystem.Init(mMaxBodies, cNumBodyMutexes, mMaxBodyPairs, mMaxContactConstraints, mBroadPhaseLayerInterface, mObjectVsBroadPhaseLayerFilter, mObjectLayerPairFilter);
+
+        bodyManager = new BodyManager(physicsSystem.GetBodyInterface());
+        componentManager = new ComponentManager(bodyManager);
     }
 
     public static void init(final JParserLibraryLoaderListener listener) {
@@ -82,6 +90,14 @@ public class JoltPhysicsPlugin {
 
     public static PhysicsSystem getPhysicsSystem() {
         return INSTANCE.physicsSystem;
+    }
+
+    public static BodyManager getBodyManager() {
+        return INSTANCE.bodyManager;
+    }
+
+    public static ComponentManager getComponentManager() {
+        return INSTANCE.componentManager;
     }
 
     public static void update(float deltaTime, int inCollisionSteps) {

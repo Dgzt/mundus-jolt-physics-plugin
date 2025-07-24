@@ -43,4 +43,8 @@ public class JoltPhysicsComponent extends AbstractComponent {
         // TODO
         return null;
     }
+
+    public Body getBody() {
+        return body;
+    }
 }

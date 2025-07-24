@@ -54,7 +54,7 @@ public class BodyManager {
                 final Vec3 c11 = Jolt.New_Vec3(vertexC11.x, vertexC11.y, vertexC11.z);
 
                 Triangle triangle1 = new Triangle(c00, c11, c10);
-                Triangle triangle2 = new Triangle(c00, c11, c01);
+                Triangle triangle2 = new Triangle(c00, c01, c11);
                 triangles.push_back(triangle1);
                 triangles.push_back(triangle2);
 

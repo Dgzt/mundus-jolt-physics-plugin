@@ -74,6 +74,8 @@ public class BodyManager {
         triangles.dispose();
         bodyCreationSettings.dispose();
 
+        terrainBody.SetFriction(1.0f);
+
         return terrainBody;
     }
 

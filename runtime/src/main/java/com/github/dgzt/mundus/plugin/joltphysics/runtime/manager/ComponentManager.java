@@ -63,4 +63,16 @@ public class ComponentManager {
         final var body = bodyManager.createSphereBody(goPosition, radius, goQuaternion, mass);
         return new JoltPhysicsComponent(gameObject, body);
     }
+
+    public JoltPhysicsComponent createCylinderPhysicsComponent(final GameObject gameObject,
+                                                               final float radius,
+                                                               final float height,
+                                                               final float mass
+    ) {
+        final var goPosition = gameObject.getPosition(TMP_POSITION);
+        final var goQuaternion = gameObject.getRotation(TMP_QUATERNION);
+
+        final var body = bodyManager.createCylinderBody(goPosition, radius, height, goQuaternion, mass);
+        return new JoltPhysicsComponent(gameObject, body);
+    }
 }

@@ -16,6 +16,7 @@ import jolt.physics.body.Body;
 import jolt.physics.body.BodyCreationSettings;
 import jolt.physics.body.BodyInterface;
 import jolt.physics.collision.shape.BoxShape;
+import jolt.physics.collision.shape.CapsuleShape;
 import jolt.physics.collision.shape.CylinderShape;
 import jolt.physics.collision.shape.MeshShapeSettings;
 import jolt.physics.collision.shape.Shape;
@@ -117,6 +118,21 @@ public class BodyManager {
                                    final Quaternion quaternion,
                                    final float mass) {
         final var bodyShape = new CylinderShape(height / 2f, radius);
+
+        tempVec3.Set(position.x, position.y, position.z);
+        tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+
+        final var body = createBody(bodyShape, mass, tempVec3, tempQuat);
+        bodyInterface.AddBody(body.GetID(), EActivation.Activate);
+        return body;
+    }
+
+    public Body createCapsuleBody(final Vector3 position,
+                                  final float radius,
+                                  final float height,
+                                  final Quaternion quaternion,
+                                  final float mass) {
+        final var bodyShape = new CapsuleShape(height / 2f, radius);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);

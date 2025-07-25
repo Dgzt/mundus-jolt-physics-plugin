@@ -17,10 +17,11 @@ import jolt.physics.body.BodyCreationSettings;
 import jolt.physics.body.BodyInterface;
 import jolt.physics.collision.shape.BoxShape;
 import jolt.physics.collision.shape.MeshShapeSettings;
+import jolt.physics.collision.shape.SphereShape;
 
 public class BodyManager {
 
-    private final float boxRestitution = 0.8f;
+    private final float restitution = 0.8f;
 
     private final BodyInterface bodyInterface;
     private final Vec3 tempVec3;
@@ -103,7 +104,39 @@ public class BodyManager {
 
         final var bodySettings = Jolt.New_BodyCreationSettings(bodyShape, tempVec3, tempQuat, motionType, layer);
         bodySettings.set_mMassPropertiesOverride(massProperties);
-        bodySettings.set_mRestitution(boxRestitution);
+        bodySettings.set_mRestitution(restitution);
+        final var body = bodyInterface.CreateBody(bodySettings);
+        bodySettings.dispose();
+
+        bodyInterface.AddBody(body.GetID(), EActivation.Activate);
+
+        return body;
+    }
+
+    public Body createSphereBody(final Vector3 position,
+                                 final float radius,
+                                 final Quaternion quaternion,
+                                 final float mass) {
+        final var bodyShape = new SphereShape(radius);
+
+        tempVec3.Set(position.x, position.y, position.z);
+        tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+
+        final var massProperties = bodyShape.GetMassProperties();
+        EMotionType motionType;
+        int layer;
+        if (mass > 0f) {
+            massProperties.set_mMass(mass);
+            motionType = EMotionType.Dynamic;
+            layer = Layers.MOVING;
+        } else {
+            motionType = EMotionType.Static;
+            layer = Layers.NON_MOVING;
+        }
+
+        final var bodySettings = Jolt.New_BodyCreationSettings(bodyShape, tempVec3, tempQuat, motionType, layer);
+        bodySettings.set_mMassPropertiesOverride(massProperties);
+        bodySettings.set_mRestitution(restitution);
         final var body = bodyInterface.CreateBody(bodySettings);
         bodySettings.dispose();
 

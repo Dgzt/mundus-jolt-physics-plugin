@@ -27,7 +27,9 @@ public class ComponentManager {
         return new JoltPhysicsComponent(gameObject, terrainBody);
     }
 
-    public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject, final float mass) {
+    public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject,
+                                                          final float mass
+    ) {
         final var goScale = gameObject.getScale(TMP_SCALE);
         final var modelComponent = gameObject.<ModelComponent>findComponentByType(Component.Type.MODEL);
         final var bounds = modelComponent.getOrientedBoundingBox().getBounds();
@@ -38,12 +40,27 @@ public class ComponentManager {
         return createBoxPhysicsComponent(gameObject, width, height, depth, mass);
     }
 
-    public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject, final float width, final float height, final float depth, final float mass) {
+    public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject,
+                                                          final float width,
+                                                          final float height,
+                                                          final float depth,
+                                                          final float mass
+    ) {
         final var goPosition = gameObject.getPosition(TMP_POSITION);
         final var goQuaternion = gameObject.getRotation(TMP_QUATERNION);
 
         final var body = bodyManager.createBoxBody(goPosition, width, height, depth, goQuaternion, mass);
+        return new JoltPhysicsComponent(gameObject, body);
+    }
 
+    public JoltPhysicsComponent createSpherePhysicsComponent(final GameObject gameObject,
+                                                             final float radius,
+                                                             final float mass
+    ) {
+        final var goPosition = gameObject.getPosition(TMP_POSITION);
+        final var goQuaternion = gameObject.getRotation(TMP_QUATERNION);
+
+        final var body = bodyManager.createSphereBody(goPosition, radius, goQuaternion, mass);
         return new JoltPhysicsComponent(gameObject, body);
     }
 }

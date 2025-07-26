@@ -1,5 +1,6 @@
 package com.github.dgzt.mundus.plugin.joltphysics.runtime;
 
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.config.RuntimeConfig;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.Layers;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.manager.BodyManager;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.manager.ComponentManager;
@@ -32,7 +33,9 @@ public class JoltPhysicsPlugin {
     private final BodyManager bodyManager;
     private final ComponentManager componentManager;
 
-    private JoltPhysicsPlugin() {
+    private final UpdateCallback updateCallback;
+
+    private JoltPhysicsPlugin(final RuntimeConfig config) {
         Jolt.Init();
 
         int mMaxBodies = 10240;
@@ -77,12 +80,18 @@ public class JoltPhysicsPlugin {
 
         bodyManager = new BodyManager(physicsSystem.GetBodyInterface());
         componentManager = new ComponentManager(bodyManager);
+
+        updateCallback = config.updateCallback;
     }
 
     public static void init(final JParserLibraryLoaderListener listener) {
+        init(new RuntimeConfig(), listener);
+    }
+
+    public static void init(final RuntimeConfig config, final JParserLibraryLoaderListener listener) {
         JoltLoader.init((joltSuccess, exception) -> {
             if (joltSuccess) {
-                INSTANCE = new JoltPhysicsPlugin();
+                INSTANCE = new JoltPhysicsPlugin(config);
             }
             listener.onLoad(joltSuccess, exception);
         });
@@ -100,8 +109,8 @@ public class JoltPhysicsPlugin {
         return INSTANCE.componentManager;
     }
 
-    public static void update(float deltaTime, int inCollisionSteps) {
-        INSTANCE.physicsSystem.Update(deltaTime, inCollisionSteps, INSTANCE.mTempAllocator, INSTANCE.mJobSystem);
+    public static void update() {
+        INSTANCE.updateCallback.update(INSTANCE.mTempAllocator, INSTANCE.mJobSystem);
     }
 
     public static void dispose() {

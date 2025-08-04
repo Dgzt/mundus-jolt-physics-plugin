@@ -62,7 +62,9 @@ tasks.withType<Jar> {
         .runtimeClasspath
         .get()
         .filter {
-            it.name.equals("runtime.jar")
+            it.name.equals("runtime.jar") ||
+            it.name.equals("jolt-core-${project.properties["gdxJoltVersion"]}.jar") ||
+            it.name.equals("jolt-gdx-${project.properties["gdxJoltVersion"]}.jar")
         }
         .map(::zipTree)
     from(dependencies)

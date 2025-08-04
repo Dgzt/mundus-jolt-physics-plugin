@@ -21,12 +21,16 @@ repositories {
     maven {
         url=uri("https://jitpack.io")
     }
+    maven {
+        url=uri("https://central.sonatype.com/repository/maven-snapshots/")
+    }
 }
 
 dependencies {
     api("org.pf4j:pf4j:${project.properties["pf4jVersion"]}")
     api("com.badlogicgames.gdx:gdx:${project.properties["libgdxVersion"]}")
     kapt("org.pf4j:pf4j:${project.properties["pf4jVersion"]}")
+    api(project(":runtime"))
 
     implementation("com.github.jamestkhan.mundus:commons:${project.properties["mundusVersion"]}")
     implementation("com.github.jamestkhan.mundus:plugin-api:${project.properties["mundusVersion"]}")
@@ -36,7 +40,7 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 

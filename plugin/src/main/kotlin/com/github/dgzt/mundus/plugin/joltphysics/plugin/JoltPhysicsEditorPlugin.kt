@@ -24,6 +24,8 @@ class JoltPhysicsEditorPlugin : Plugin() {
         var initResult = JoltPhysicsPlugin.init().get()
         Gdx.app.log(PluginConstants.LOG_TAG, "Jolt Physics loaded: " + initResult.isSuccess)
 
+        PropertyManager.joltPhysicsLoaded = initResult.isSuccess
+
         if (!initResult.isSuccess) {
             Gdx.app.log(PluginConstants.LOG_TAG, "Error: ", initResult.exception)
         }
@@ -61,9 +63,9 @@ class JoltPhysicsEditorPlugin : Plugin() {
     class Ode4jDisposeExtension : DisposeExtension {
         override fun dispose() {
             Gdx.app.log(PluginConstants.LOG_TAG, "Dispose")
-//            i/f (PropertyManager.joltPhysicsLoaded) {
-//                JoltPhysicsRuntimePlugin.dispose()
-//            }
+            if (PropertyManager.joltPhysicsLoaded) {
+                JoltPhysicsPlugin.dispose()
+            }
         }
     }
 }

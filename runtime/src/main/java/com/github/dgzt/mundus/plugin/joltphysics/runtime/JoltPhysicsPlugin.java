@@ -4,7 +4,6 @@ import com.github.dgzt.mundus.plugin.joltphysics.runtime.config.RuntimeConfig;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.Layers;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.manager.BodyManager;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.manager.ComponentManager;
-import com.github.xpenatan.jparser.loader.JParserLibraryLoaderListener;
 import jolt.Jolt;
 import jolt.JoltLoader;
 import jolt.core.Factory;
@@ -15,6 +14,8 @@ import jolt.physics.collision.ObjectLayerPairFilterTable;
 import jolt.physics.collision.broadphase.BroadPhaseLayer;
 import jolt.physics.collision.broadphase.BroadPhaseLayerInterfaceTable;
 import jolt.physics.collision.broadphase.ObjectVsBroadPhaseLayerFilterTable;
+
+import java.util.concurrent.CompletableFuture;
 
 public class JoltPhysicsPlugin {
 
@@ -84,17 +85,21 @@ public class JoltPhysicsPlugin {
         updateCallback = config.updateCallback;
     }
 
-    public static void init(final JParserLibraryLoaderListener listener) {
-        init(new RuntimeConfig(), listener);
+    public static CompletableFuture<InitResult> init() {
+        return init(new RuntimeConfig());
     }
 
-    public static void init(final RuntimeConfig config, final JParserLibraryLoaderListener listener) {
+    public static CompletableFuture<InitResult> init(final RuntimeConfig config) {
+        final var future = new CompletableFuture<InitResult>();
+
         JoltLoader.init((joltSuccess, exception) -> {
             if (joltSuccess) {
                 INSTANCE = new JoltPhysicsPlugin(config);
             }
-            listener.onLoad(joltSuccess, exception);
+            future.complete(new InitResult(joltSuccess, exception));
         });
+
+        return future;
     }
 
     public static PhysicsSystem getPhysicsSystem() {

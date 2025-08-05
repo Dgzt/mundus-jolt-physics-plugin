@@ -1,9 +1,9 @@
 package com.github.dgzt.mundus.plugin.joltphysics.plugin
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.utils.SharedLibraryLoader
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentCreator
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentWidgetCreator
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.converter.JoltPhysicsComponentConverter
@@ -16,19 +16,16 @@ import com.mbrlabs.mundus.pluginapi.MenuExtension
 import com.mbrlabs.mundus.pluginapi.ui.RootWidget
 import org.pf4j.Extension
 import org.pf4j.Plugin
-import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin as JoltPhysicsRuntimePlugin
 
-class JoltPhysicsPlugin : Plugin() {
-
-    val loader: SharedLibraryLoader = SharedLibraryLoader(System.getProperty("user.home") + "/.mundus/plugins/jolt-physics-plugin.jar")
+class JoltPhysicsEditorPlugin : Plugin() {
 
     override fun start() {
-        Gdx.app.debug(PluginConstants.LOG_TAG, "Start Jolt Physics plugin")
-        try {
-            loader.load("jolt")
-            Gdx.app.log(PluginConstants.LOG_TAG, "Jolt Physics native library loaded.")
-        } catch (e : Throwable) {
-            Gdx.app.error(PluginConstants.LOG_TAG, "Error during load Jolt Physics native library!", e)
+        Gdx.app.log(PluginConstants.LOG_TAG, "Start Jolt Physics plugin")
+        var initResult = JoltPhysicsPlugin.init().get()
+        Gdx.app.log(PluginConstants.LOG_TAG, "Jolt Physics loaded: " + initResult.isSuccess)
+
+        if (!initResult.isSuccess) {
+            Gdx.app.log(PluginConstants.LOG_TAG, "Error: ", initResult.exception)
         }
     }
 
@@ -64,9 +61,9 @@ class JoltPhysicsPlugin : Plugin() {
     class Ode4jDisposeExtension : DisposeExtension {
         override fun dispose() {
             Gdx.app.log(PluginConstants.LOG_TAG, "Dispose")
-            if (PropertyManager.joltPhysicsLoaded) {
-                JoltPhysicsRuntimePlugin.dispose()
-            }
+//            i/f (PropertyManager.joltPhysicsLoaded) {
+//                JoltPhysicsRuntimePlugin.dispose()
+//            }
         }
     }
 }

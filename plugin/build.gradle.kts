@@ -53,7 +53,7 @@ tasks.withType<Jar> {
 
     // Otherwise you'll get a "No main manifest attribute" error
     manifest {
-        attributes["Plugin-Class"]= "com.github.dgzt.mundus.plugin.joltphysics.plugin.JoltPhysicsPlugin"
+        attributes["Plugin-Class"]= "com.github.dgzt.mundus.plugin.joltphysics.plugin.JoltPhysicsEditorPlugin"
         attributes["Plugin-Id"] = "jolt-physics-plugin"
         attributes["Plugin-Provider"] = "Tibor Zsuro (Dgzt)"
         attributes["Plugin-Version"] = "0.0.1"
@@ -68,7 +68,7 @@ tasks.withType<Jar> {
             it.name.equals("jolt-core-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-gdx-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-desktop-${project.properties["gdxJoltVersion"]}.jar") ||
-            it.name.equals("loader-core-${project.properties["gdxJoltVersion"]}.jar")
+            it.name.equals("loader-core-1.0.0-b13.jar")
         }
         .map(::zipTree)
     from(dependencies)

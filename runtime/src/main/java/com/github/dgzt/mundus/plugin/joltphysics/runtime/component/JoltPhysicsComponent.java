@@ -21,6 +21,7 @@ public class JoltPhysicsComponent extends AbstractComponent {
     public JoltPhysicsComponent(final GameObject go, final Body body) {
         super(go);
         this.body = body;
+        setType(Type.PHYSICS);
     }
 
     @Override

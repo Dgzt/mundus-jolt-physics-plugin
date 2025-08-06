@@ -1,6 +1,7 @@
 package com.github.dgzt.mundus.plugin.joltphysics.plugin
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Camera
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentCreator
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentWidgetCreator
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin
@@ -11,6 +12,7 @@ import com.mbrlabs.mundus.commons.mapper.CustomComponentConverter
 import com.mbrlabs.mundus.commons.scene3d.GameObject
 import com.mbrlabs.mundus.commons.scene3d.components.Component
 import com.mbrlabs.mundus.pluginapi.ComponentExtension
+import com.mbrlabs.mundus.pluginapi.CustomShaderRenderExtension
 import com.mbrlabs.mundus.pluginapi.DisposeExtension
 import com.mbrlabs.mundus.pluginapi.MenuExtension
 import com.mbrlabs.mundus.pluginapi.ui.RootWidget
@@ -34,14 +36,12 @@ class JoltPhysicsEditorPlugin : Plugin() {
     @Extension
     class JoltPhysicsExtension : MenuExtension {
 
-        companion object {
-            const val PAD = 5f
-        }
-
         override fun getMenuName(): String = "Jolt Physics"
 
         override fun setupDialogRootWidget(root: RootWidget) {
-            root.addLabel("Jolt Physics").setPad(PAD, PAD, PAD, PAD)
+            root.addCheckbox("Debug renderer", PropertyManager.debugRendererEnabled) {
+                PropertyManager.debugRendererEnabled = it
+            }
         }
     }
 
@@ -60,9 +60,19 @@ class JoltPhysicsEditorPlugin : Plugin() {
     }
 
     @Extension
+    class JoltPhysicsCustomShaderRenderExtension : CustomShaderRenderExtension {
+        override fun render(camera: Camera) {
+            if (PropertyManager.debugRendererEnabled) {
+                PropertyManager.debugRendererManager.render(camera)
+            }
+        }
+    }
+
+    @Extension
     class Ode4jDisposeExtension : DisposeExtension {
         override fun dispose() {
             Gdx.app.log(PluginConstants.LOG_TAG, "Dispose")
+            PropertyManager.debugRendererManager.dispose()
             if (PropertyManager.joltPhysicsLoaded) {
                 JoltPhysicsPlugin.dispose()
             }

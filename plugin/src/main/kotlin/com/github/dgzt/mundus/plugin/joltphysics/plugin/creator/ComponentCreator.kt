@@ -16,7 +16,7 @@ object ComponentCreator {
         } else if (GameObjectUtils.isTerrainGameObject(gameObject)) {
             physicsComponent = componentManager.createTerrainPhysicsComponent(gameObject)
         } else if (GameObjectUtils.isModelGameObject(gameObject)) {
-            throw RuntimeException("Implement later")
+            physicsComponent = componentManager.createBoxPhysicsComponent(gameObject)
         } else {
             throw UnsupportedOperationException("Not supported game object type!")
 

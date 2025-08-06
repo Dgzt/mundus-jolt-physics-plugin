@@ -3,6 +3,7 @@ package com.github.dgzt.mundus.plugin.joltphysics.runtime.manager;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants;
 import com.mbrlabs.mundus.commons.scene3d.GameObject;
 import com.mbrlabs.mundus.commons.scene3d.components.Component;
 import com.mbrlabs.mundus.commons.scene3d.components.ModelComponent;
@@ -25,6 +26,10 @@ public class ComponentManager {
         final var terrainBody = bodyManager.createTerrainBody(terrainComponent);
 
         return new JoltPhysicsComponent(gameObject, terrainBody);
+    }
+
+    public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject) {
+        return createBoxPhysicsComponent(gameObject, PluginConstants.STATIC_OBJECT_MASS);
     }
 
     public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject,

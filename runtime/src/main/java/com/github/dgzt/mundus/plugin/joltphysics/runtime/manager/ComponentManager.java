@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.type.ShapeType;
 import com.mbrlabs.mundus.commons.scene3d.GameObject;
 import com.mbrlabs.mundus.commons.scene3d.components.Component;
 import com.mbrlabs.mundus.commons.scene3d.components.ModelComponent;
@@ -25,7 +26,7 @@ public class ComponentManager {
         final var terrainComponent = gameObject.<TerrainComponent>findComponentByType(Component.Type.TERRAIN);
         final var terrainBody = bodyManager.createTerrainBody(terrainComponent);
 
-        return new JoltPhysicsComponent(gameObject, terrainBody);
+        return new JoltPhysicsComponent(gameObject, ShapeType.TERRAIN, null, terrainBody);
     }
 
     public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject) {
@@ -54,8 +55,8 @@ public class ComponentManager {
         final var goPosition = gameObject.getPosition(TMP_POSITION);
         final var goQuaternion = gameObject.getRotation(TMP_QUATERNION);
 
-        final var body = bodyManager.createBoxBody(goPosition, width, height, depth, goQuaternion, mass);
-        return new JoltPhysicsComponent(gameObject, body);
+        final var bodyData = bodyManager.createBoxBody(goPosition, width, height, depth, goQuaternion, mass);
+        return new JoltPhysicsComponent(gameObject, ShapeType.BOX, bodyData);
     }
 
     public JoltPhysicsComponent createSpherePhysicsComponent(final GameObject gameObject,
@@ -65,8 +66,8 @@ public class ComponentManager {
         final var goPosition = gameObject.getPosition(TMP_POSITION);
         final var goQuaternion = gameObject.getRotation(TMP_QUATERNION);
 
-        final var body = bodyManager.createSphereBody(goPosition, radius, goQuaternion, mass);
-        return new JoltPhysicsComponent(gameObject, body);
+        final var bodyData = bodyManager.createSphereBody(goPosition, radius, goQuaternion, mass);
+        return new JoltPhysicsComponent(gameObject, ShapeType.SPHERE, bodyData);
     }
 
     public JoltPhysicsComponent createCylinderPhysicsComponent(final GameObject gameObject,
@@ -77,8 +78,8 @@ public class ComponentManager {
         final var goPosition = gameObject.getPosition(TMP_POSITION);
         final var goQuaternion = gameObject.getRotation(TMP_QUATERNION);
 
-        final var body = bodyManager.createCylinderBody(goPosition, radius, height, goQuaternion, mass);
-        return new JoltPhysicsComponent(gameObject, body);
+        final var bodyData = bodyManager.createCylinderBody(goPosition, radius, height, goQuaternion, mass);
+        return new JoltPhysicsComponent(gameObject, ShapeType.CYLINDER, bodyData);
     }
 
     public JoltPhysicsComponent createCapsulePhysicsComponent(final GameObject gameObject,
@@ -89,7 +90,7 @@ public class ComponentManager {
         final var goPosition = gameObject.getPosition(TMP_POSITION);
         final var goQuaternion = gameObject.getRotation(TMP_QUATERNION);
 
-        final var body = bodyManager.createCapsuleBody(goPosition, radius, height, goQuaternion, mass);
-        return new JoltPhysicsComponent(gameObject, body);
+        final var bodyData = bodyManager.createCapsuleBody(goPosition, radius, height, goQuaternion, mass);
+        return new JoltPhysicsComponent(gameObject, ShapeType.CAPSULE, bodyData);
     }
 }

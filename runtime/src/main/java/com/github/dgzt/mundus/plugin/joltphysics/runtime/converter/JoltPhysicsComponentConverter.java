@@ -29,6 +29,6 @@ public class JoltPhysicsComponentConverter implements CustomComponentConverter {
 
     @Override
     public Component convert(final GameObject gameObject, final OrderedMap<String, String> componentProperties, final ObjectMap<String, Asset> assets) {
-        return new JoltPhysicsComponent(gameObject, null); //TODO
+        return new JoltPhysicsComponent(gameObject, null, null); //TODO
     }
 }

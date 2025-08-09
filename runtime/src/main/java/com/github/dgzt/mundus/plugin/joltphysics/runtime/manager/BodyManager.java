@@ -3,6 +3,8 @@ package com.github.dgzt.mundus.plugin.joltphysics.runtime.manager;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.Layers;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.BodyData;
 import com.mbrlabs.mundus.commons.scene3d.components.TerrainComponent;
 import com.mbrlabs.mundus.commons.terrain.Terrain;
 import jolt.Jolt;
@@ -83,63 +85,69 @@ public class BodyManager {
         return terrainBody;
     }
 
-    public Body createBoxBody(final Vector3 position,
-                              final float width, final float height, final float depth,
-                              final Quaternion quaternion,
-                              final float mass) {
+    public BodyData createBoxBody(final Vector3 position,
+                                  final float width, final float height, final float depth,
+                                  final Quaternion quaternion) {
+        return createBoxBody(position, width, height, depth, quaternion, PluginConstants.STATIC_OBJECT_MASS);
+    }
+
+    public BodyData createBoxBody(final Vector3 position,
+                                  final float width, final float height, final float depth,
+                                  final Quaternion quaternion,
+                                  final float mass) {
         tempVec3.Set(width / 2f, height / 2f, depth / 2f);
-        final var bodyShape = new BoxShape(tempVec3);
+        final var shape = new BoxShape(tempVec3);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(bodyShape, mass, tempVec3, tempQuat);
+        final var body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
-        return body;
+        return new BodyData(body, shape);
     }
 
-    public Body createSphereBody(final Vector3 position,
+    public BodyData createSphereBody(final Vector3 position,
                                  final float radius,
                                  final Quaternion quaternion,
                                  final float mass) {
-        final var bodyShape = new SphereShape(radius);
+        final var shape = new SphereShape(radius);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(bodyShape, mass, tempVec3, tempQuat);
+        final var body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
-        return body;
+        return new BodyData(body, shape);
     }
 
-    public Body createCylinderBody(final Vector3 position,
+    public BodyData createCylinderBody(final Vector3 position,
                                    final float radius,
                                    final float height,
                                    final Quaternion quaternion,
                                    final float mass) {
-        final var bodyShape = new CylinderShape(height / 2f, radius);
+        final var shape = new CylinderShape(height / 2f, radius);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(bodyShape, mass, tempVec3, tempQuat);
+        final var body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
-        return body;
+        return new BodyData(body, shape);
     }
 
-    public Body createCapsuleBody(final Vector3 position,
+    public BodyData createCapsuleBody(final Vector3 position,
                                   final float radius,
                                   final float height,
                                   final Quaternion quaternion,
                                   final float mass) {
-        final var bodyShape = new CapsuleShape(height / 2f, radius);
+        final var shape = new CapsuleShape(height / 2f, radius);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(bodyShape, mass, tempVec3, tempQuat);
+        final var body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
-        return body;
+        return new BodyData(body, shape);
     }
 
     private Body createBody(final Shape bodyShape,

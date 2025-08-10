@@ -29,6 +29,10 @@ public class ComponentManager {
         return new JoltPhysicsComponent(gameObject, ShapeType.TERRAIN, null, terrainBody);
     }
 
+    public JoltPhysicsComponent createTerrainSystemPhysicsComponent(final GameObject gameObject) {
+        return new JoltPhysicsComponent(gameObject, ShapeType.TERRAIN, null, null);
+    }
+
     public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject) {
         return createBoxPhysicsComponent(gameObject, PluginConstants.STATIC_OBJECT_MASS);
     }

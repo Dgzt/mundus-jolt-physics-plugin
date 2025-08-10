@@ -26,6 +26,8 @@ import jolt.physics.collision.shape.SphereShape;
 
 public class BodyManager {
 
+    private static final Vector3 TMP_VECTOR3 = new Vector3();
+
     private final float restitution = 0.8f;
 
     private final BodyInterface bodyInterface;
@@ -39,6 +41,8 @@ public class BodyManager {
     }
 
     public Body createTerrainBody(final TerrainComponent terrainComponent) {
+        final var goPosition = terrainComponent.gameObject.getPosition(TMP_VECTOR3);
+        final Vec3 inPosition = Jolt.New_Vec3(goPosition.x, goPosition.y, goPosition.z);
         final Terrain terrain = terrainComponent.getTerrainAsset().getTerrain();
 
         final Vector3 vertexC00 = new Vector3();
@@ -74,11 +78,12 @@ public class BodyManager {
 
         }
 
-        BodyCreationSettings bodyCreationSettings = Jolt.New_BodyCreationSettings(new MeshShapeSettings(triangles), Vec3.sZero(), Quat.sIdentity(), EMotionType.Static, Layers.NON_MOVING);
+        BodyCreationSettings bodyCreationSettings = Jolt.New_BodyCreationSettings(new MeshShapeSettings(triangles), inPosition, Quat.sIdentity(), EMotionType.Static, Layers.NON_MOVING);
         Body terrainBody = bodyInterface.CreateBody(bodyCreationSettings);
         bodyInterface.AddBody(terrainBody.GetID(), EActivation.DontActivate);
         triangles.dispose();
         bodyCreationSettings.dispose();
+        inPosition.dispose();
 
         terrainBody.SetFriction(1.0f);
 

@@ -58,7 +58,7 @@ public class JoltPhysicsComponentConverter implements CustomComponentConverter {
         switch (shapeType) {
             case TERRAIN:
                 if (gameObject.findComponentByType(Component.Type.TERRAIN) == null) {
-                    throw new UnsupportedOperationException("Implement later");
+                    physicsComponent = componentManager.createTerrainSystemPhysicsComponent(gameObject);
                 } else {
                     physicsComponent = componentManager.createTerrainPhysicsComponent(gameObject);
                 }

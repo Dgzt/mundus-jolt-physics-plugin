@@ -19,10 +19,11 @@ public class JoltPhysicsComponent extends AbstractComponent {
     private final Vector3 tempPosition = new Vector3();
     private final Quaternion tempQuat = new Quaternion();
 
-    private ShapeType shapeType;
+    private final ShapeType shapeType;
+    // The shape can be null only if game object is terrain and terrain system (parent)
     private Shape shape;
+    // The body cana be null only if game object is terrain system (parent)
     private Body body;
-
     // User-defined data. It can be null
     private Object userData;
 
@@ -40,7 +41,7 @@ public class JoltPhysicsComponent extends AbstractComponent {
 
     @Override
     public void update(final float delta) {
-        if (EMotionType.Dynamic.equals(body.GetMotionType())) {
+        if (body != null && EMotionType.Dynamic.equals(body.GetMotionType())) {
             final var mat44 = body.GetWorldTransform();
             tempMatrix4.idt();
             JoltGdx.mat44_to_matrix4(mat44, tempMatrix4);

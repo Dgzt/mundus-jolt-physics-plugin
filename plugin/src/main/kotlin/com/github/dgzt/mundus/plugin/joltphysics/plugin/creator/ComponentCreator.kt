@@ -12,7 +12,15 @@ object ComponentCreator {
         val physicsComponent: JoltPhysicsComponent
 
         if (GameObjectUtils.isTerrainManagerGameObject(gameObject)) {
-            throw RuntimeException("Implement later")
+            physicsComponent = componentManager.createTerrainSystemPhysicsComponent(gameObject)
+
+            if (!GameObjectUtils.hasPhysicsComponent(gameObject)) {
+                for (childGameObject in gameObject.children) {
+                    if (GameObjectUtils.isTerrainGameObject(childGameObject) && !GameObjectUtils.hasPhysicsComponent(childGameObject)) {
+                        childGameObject.addComponent(componentManager.createTerrainPhysicsComponent(childGameObject))
+                    }
+                }
+            }
         } else if (GameObjectUtils.isTerrainGameObject(gameObject)) {
             physicsComponent = componentManager.createTerrainPhysicsComponent(gameObject)
         } else if (GameObjectUtils.isModelGameObject(gameObject)) {

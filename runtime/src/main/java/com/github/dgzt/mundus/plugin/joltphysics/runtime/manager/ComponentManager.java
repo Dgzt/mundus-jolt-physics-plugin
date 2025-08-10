@@ -49,6 +49,14 @@ public class ComponentManager {
     public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject,
                                                           final float width,
                                                           final float height,
+                                                          final float depth
+    ) {
+        return createBoxPhysicsComponent(gameObject, width, height, depth, PluginConstants.STATIC_OBJECT_MASS);
+    }
+
+    public JoltPhysicsComponent createBoxPhysicsComponent(final GameObject gameObject,
+                                                          final float width,
+                                                          final float height,
                                                           final float depth,
                                                           final float mass
     ) {

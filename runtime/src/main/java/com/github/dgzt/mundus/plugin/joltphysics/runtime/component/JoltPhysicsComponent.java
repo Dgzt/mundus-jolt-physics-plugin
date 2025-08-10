@@ -23,6 +23,9 @@ public class JoltPhysicsComponent extends AbstractComponent {
     private Shape shape;
     private Body body;
 
+    // User-defined data. It can be null
+    private Object userData;
+
     public JoltPhysicsComponent(final GameObject go, final ShapeType shapeType, final BodyData bodyData) {
         this(go, shapeType, bodyData.getShape(), bodyData.getBody());
     }
@@ -83,5 +86,13 @@ public class JoltPhysicsComponent extends AbstractComponent {
 
     public void setBody(Body body) {
         this.body = body;
+    }
+
+    public Object getUserData() {
+        return userData;
+    }
+
+    public void setUserData(Object userData) {
+        this.userData = userData;
     }
 }

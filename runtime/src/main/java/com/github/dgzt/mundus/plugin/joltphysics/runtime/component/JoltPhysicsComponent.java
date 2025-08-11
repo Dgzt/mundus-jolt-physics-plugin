@@ -6,14 +6,13 @@ import com.badlogic.gdx.math.Vector3;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.BodyData;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.type.ShapeType;
 import com.mbrlabs.mundus.commons.scene3d.GameObject;
-import com.mbrlabs.mundus.commons.scene3d.components.AbstractComponent;
 import com.mbrlabs.mundus.commons.scene3d.components.Component;
 import jolt.enums.EMotionType;
 import jolt.gdx.JoltGdx;
 import jolt.physics.body.Body;
 import jolt.physics.collision.shape.Shape;
 
-public class JoltPhysicsComponent extends AbstractComponent {
+public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent {
 
     private final Matrix4 tempMatrix4 = new Matrix4();
     private final Vector3 tempPosition = new Vector3();
@@ -36,7 +35,6 @@ public class JoltPhysicsComponent extends AbstractComponent {
         this.shapeType = shapeType;
         this.shape = shape;
         this.body = body;
-        setType(Type.PHYSICS);
     }
 
     @Override

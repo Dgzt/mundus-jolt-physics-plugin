@@ -36,7 +36,7 @@ dependencies {
     implementation("com.github.jamestkhan.mundus:plugin-api:${project.properties["mundusVersion"]}")
     implementation("com.github.jamestkhan.mundus:editor-commons:${project.properties["mundusVersion"]}")
 
-    implementation("com.github.xpenatan.gdx-jolt:jolt-desktop:${project.properties["gdxJoltVersion"]}")
+    implementation("com.github.xpenatan.xJolt:jolt-desktop:${project.properties["gdxJoltVersion"]}")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -68,7 +68,7 @@ tasks.withType<Jar> {
             it.name.equals("jolt-core-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-gdx-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-desktop-${project.properties["gdxJoltVersion"]}.jar") ||
-            it.name.equals("loader-core-1.0.0-b13.jar")
+            it.name.equals("loader-core-1.0.0-b18.jar")
         }
         .map(::zipTree)
     from(dependencies)

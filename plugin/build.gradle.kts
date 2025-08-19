@@ -68,7 +68,7 @@ tasks.withType<Jar> {
             it.name.equals("jolt-core-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-gdx-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-desktop-${project.properties["gdxJoltVersion"]}.jar") ||
-            it.name.equals("loader-core-1.0.0-b18.jar")
+                    (it.name.startsWith("loader-core-") && it.name.endsWith(".jar"))
         }
         .map(::zipTree)
     from(dependencies)

@@ -74,6 +74,7 @@ class JoltPhysicsEditorPlugin : Plugin() {
             Gdx.app.log(PluginConstants.LOG_TAG, "Dispose")
             PropertyManager.debugRendererManager.dispose()
             if (PropertyManager.joltPhysicsLoaded) {
+                JoltPhysicsPlugin.clearWorld()
                 JoltPhysicsPlugin.dispose()
             }
         }

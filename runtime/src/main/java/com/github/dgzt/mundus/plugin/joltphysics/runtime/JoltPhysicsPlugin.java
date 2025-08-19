@@ -118,6 +118,10 @@ public class JoltPhysicsPlugin {
         INSTANCE.updateCallback.update(INSTANCE.mTempAllocator, INSTANCE.mJobSystem);
     }
 
+    public static void clearWorld() {
+        Jolt.ClearWorld(INSTANCE.physicsSystem);
+    }
+
     public static void dispose() {
         INSTANCE.physicsSystem.dispose();
         INSTANCE.BP_LAYER_NON_MOVING.dispose();

@@ -28,6 +28,7 @@ class DebugRendererManager : Disposable {
     }
 
     override fun dispose() {
+        debugRenderer?.clear()
         debugRenderer?.dispose()
         debugSettings?.dispose()
     }

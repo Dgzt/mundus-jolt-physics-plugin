@@ -3,6 +3,7 @@ package com.github.dgzt.mundus.plugin.joltphysics.runtime;
 import com.badlogic.gdx.Gdx;
 import jolt.core.JobSystemThreadPool;
 import jolt.core.TempAllocatorImpl;
+import jolt.physics.PhysicsSystem;
 
 public class DefaultUpdateCallback implements UpdateCallback {
 
@@ -14,7 +15,7 @@ public class DefaultUpdateCallback implements UpdateCallback {
             // When running below 55 Hz, do 2 steps instead of 1
             final int numSteps = deltaTime > 1.0 / 55.0 ? 2 : 1;
 //            JoltPhysicsPlugin.update(deltaTime, numSteps);
-            final var physicsSystem = JoltPhysicsPlugin.getPhysicsSystem();
+            final PhysicsSystem physicsSystem = JoltPhysicsPlugin.getPhysicsSystem();
             physicsSystem.Update(deltaTime, numSteps, mTempAllocator, mJobSystem);
         }
     }

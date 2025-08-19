@@ -17,6 +17,7 @@ import jolt.math.Vec3;
 import jolt.physics.body.Body;
 import jolt.physics.body.BodyCreationSettings;
 import jolt.physics.body.BodyInterface;
+import jolt.physics.body.MassProperties;
 import jolt.physics.collision.shape.BoxShape;
 import jolt.physics.collision.shape.CapsuleShape;
 import jolt.physics.collision.shape.CylinderShape;
@@ -41,7 +42,7 @@ public class BodyManager {
     }
 
     public Body createTerrainBody(final TerrainComponent terrainComponent) {
-        final var goPosition = terrainComponent.gameObject.getPosition(TMP_VECTOR3);
+        final Vector3 goPosition = terrainComponent.gameObject.getPosition(TMP_VECTOR3);
         final Vec3 inPosition = Jolt.New_Vec3(goPosition.x, goPosition.y, goPosition.z);
         final Terrain terrain = terrainComponent.getTerrainAsset().getTerrain();
 
@@ -101,12 +102,12 @@ public class BodyManager {
                                   final Quaternion quaternion,
                                   final float mass) {
         tempVec3.Set(width / 2f, height / 2f, depth / 2f);
-        final var shape = new BoxShape(tempVec3);
+        final BoxShape shape = new BoxShape(tempVec3);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(shape, mass, tempVec3, tempQuat);
+        final Body body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
         return new BodyData(body, shape);
     }
@@ -115,12 +116,12 @@ public class BodyManager {
                                  final float radius,
                                  final Quaternion quaternion,
                                  final float mass) {
-        final var shape = new SphereShape(radius);
+        final SphereShape shape = new SphereShape(radius);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(shape, mass, tempVec3, tempQuat);
+        final Body body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
         return new BodyData(body, shape);
     }
@@ -130,12 +131,12 @@ public class BodyManager {
                                    final float height,
                                    final Quaternion quaternion,
                                    final float mass) {
-        final var shape = new CylinderShape(height / 2f, radius);
+        final CylinderShape shape = new CylinderShape(height / 2f, radius);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(shape, mass, tempVec3, tempQuat);
+        final Body body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
         return new BodyData(body, shape);
     }
@@ -145,12 +146,12 @@ public class BodyManager {
                                   final float height,
                                   final Quaternion quaternion,
                                   final float mass) {
-        final var shape = new CapsuleShape(height / 2f, radius);
+        final CapsuleShape shape = new CapsuleShape(height / 2f, radius);
 
         tempVec3.Set(position.x, position.y, position.z);
         tempQuat.Set(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
 
-        final var body = createBody(shape, mass, tempVec3, tempQuat);
+        final Body body = createBody(shape, mass, tempVec3, tempQuat);
         bodyInterface.AddBody(body.GetID(), EActivation.Activate);
         return new BodyData(body, shape);
     }
@@ -159,7 +160,7 @@ public class BodyManager {
                             final float mass,
                             final Vec3 position,
                             final Quat quaternion) {
-        final var massProperties = bodyShape.GetMassProperties();
+        final MassProperties massProperties = bodyShape.GetMassProperties();
         EMotionType motionType;
         int layer;
         if (mass > 0f) {
@@ -171,10 +172,10 @@ public class BodyManager {
             layer = Layers.NON_MOVING;
         }
 
-        final var bodySettings = Jolt.New_BodyCreationSettings(bodyShape, position, quaternion, motionType, layer);
+        final BodyCreationSettings bodySettings = Jolt.New_BodyCreationSettings(bodyShape, position, quaternion, motionType, layer);
         bodySettings.set_mMassPropertiesOverride(massProperties);
         bodySettings.set_mRestitution(restitution);
-        final var body = bodyInterface.CreateBody(bodySettings);
+        final Body body = bodyInterface.CreateBody(bodySettings);
         bodySettings.dispose();
 
         return body;

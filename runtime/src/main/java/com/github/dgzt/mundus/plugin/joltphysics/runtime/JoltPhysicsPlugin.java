@@ -90,7 +90,7 @@ public class JoltPhysicsPlugin {
     }
 
     public static CompletableFuture<InitResult> init(final RuntimeConfig config) {
-        final var future = new CompletableFuture<InitResult>();
+        final CompletableFuture<InitResult> future = new CompletableFuture<InitResult>();
 
         JoltLoader.init((joltSuccess, exception) -> {
             if (joltSuccess) {

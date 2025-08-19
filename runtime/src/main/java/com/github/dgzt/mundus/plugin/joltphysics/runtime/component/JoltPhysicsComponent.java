@@ -9,6 +9,7 @@ import com.mbrlabs.mundus.commons.scene3d.GameObject;
 import com.mbrlabs.mundus.commons.scene3d.components.Component;
 import jolt.enums.EMotionType;
 import jolt.gdx.JoltGdx;
+import jolt.math.Mat44;
 import jolt.physics.body.Body;
 import jolt.physics.collision.shape.Shape;
 
@@ -40,14 +41,14 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent {
     @Override
     public void update(final float delta) {
         if (body != null && EMotionType.Dynamic.equals(body.GetMotionType())) {
-            final var mat44 = body.GetWorldTransform();
+            final Mat44 mat44 = body.GetWorldTransform();
             tempMatrix4.idt();
             JoltGdx.mat44_to_matrix4(mat44, tempMatrix4);
 
-            final var position = tempMatrix4.getTranslation(tempPosition);
+            final Vector3 position = tempMatrix4.getTranslation(tempPosition);
             gameObject.setLocalPosition(position.x, position.y, position.z);
 
-            final var quaternion = tempMatrix4.getRotation(tempQuat);
+            final Quaternion quaternion = tempMatrix4.getRotation(tempQuat);
             gameObject.setLocalRotation(quaternion);
         }
     }
@@ -63,7 +64,7 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent {
     }
 
     public float getMass() {
-        final var inverseMass = body.GetMotionProperties().GetInverseMass();
+        final float inverseMass = body.GetMotionProperties().GetInverseMass();
         return (inverseMass != 0.0f) ? (1.0f / inverseMass) : 0.0f;
     }
 

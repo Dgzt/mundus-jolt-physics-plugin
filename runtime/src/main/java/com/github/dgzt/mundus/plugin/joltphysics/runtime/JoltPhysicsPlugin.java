@@ -128,7 +128,7 @@ public class JoltPhysicsPlugin {
         INSTANCE.BP_LAYER_MOVING.dispose();
         INSTANCE.mObjectLayerPairFilter.dispose();
 
-        Factory.set_sInstance(null);
+        Factory.set_sInstance(Factory.NULL);
         INSTANCE.factory.dispose();
         Jolt.UnregisterTypes();
 

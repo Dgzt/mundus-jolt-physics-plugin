@@ -9,4 +9,13 @@ public abstract class AbstractJoltPhysicsComponent extends AbstractComponent {
         super(go);
         setType(Type.PHYSICS);
     }
+
+    @Override
+    public void update(final float delta) {
+        // NOOP
+    }
+
+    public abstract void prePhysicsUpdate();
+
+    public abstract void postPhysicsUpdate();
 }

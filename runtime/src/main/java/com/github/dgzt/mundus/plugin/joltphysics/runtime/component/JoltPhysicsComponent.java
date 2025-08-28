@@ -3,6 +3,8 @@ package com.github.dgzt.mundus.plugin.joltphysics.runtime.component;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Disposable;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.BodyData;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.type.ShapeType;
 import com.mbrlabs.mundus.commons.scene3d.GameObject;
@@ -13,7 +15,7 @@ import jolt.math.Mat44;
 import jolt.physics.body.Body;
 import jolt.physics.collision.shape.Shape;
 
-public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent {
+public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implements Disposable {
 
     private final Matrix4 tempMatrix4 = new Matrix4();
     private final Vector3 tempPosition = new Vector3();
@@ -39,7 +41,12 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent {
     }
 
     @Override
-    public void update(final float delta) {
+    public void prePhysicsUpdate() {
+        // NOOP
+    }
+
+    @Override
+    public void postPhysicsUpdate() {
         if (body != null && EMotionType.Dynamic.equals(body.GetMotionType())) {
             final Mat44 mat44 = body.GetWorldTransform();
             tempMatrix4.idt();
@@ -57,6 +64,11 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent {
     public Component clone(final GameObject go) {
         // TODO
         return null;
+    }
+
+    @Override
+    public void dispose() {
+        JoltPhysicsPlugin.getComponentManager().removeComponent(this);
     }
 
     public boolean isStatic() {

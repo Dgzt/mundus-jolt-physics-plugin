@@ -1,5 +1,7 @@
 package com.github.dgzt.mundus.plugin.joltphysics.runtime;
 
+import com.badlogic.gdx.utils.Array;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltPhysicsComponent;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.config.RuntimeConfig;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.Layers;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.manager.BodyManager;
@@ -115,7 +117,17 @@ public class JoltPhysicsPlugin {
     }
 
     public static void update() {
+        final Array<AbstractJoltPhysicsComponent> components = getComponentManager().getComponents();
+
+        for (int i = 0; i < components.size; ++i) {
+            components.get(i).prePhysicsUpdate();
+        }
+
         INSTANCE.updateCallback.update(INSTANCE.mTempAllocator, INSTANCE.mJobSystem);
+
+        for (int i = 0; i < components.size; ++i) {
+            components.get(i).postPhysicsUpdate();
+        }
     }
 
     public static void clearWorld() {
@@ -133,5 +145,6 @@ public class JoltPhysicsPlugin {
         Jolt.UnregisterTypes();
 
         INSTANCE.bodyManager.dispose();
+        INSTANCE.componentManager.dispose();
     }
 }

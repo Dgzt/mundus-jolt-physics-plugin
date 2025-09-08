@@ -37,13 +37,13 @@ public class BodyManager {
 
     public BodyManager(final BodyInterface bodyInterface) {
         this.bodyInterface = bodyInterface;
-        tempVec3 = Jolt.New_Vec3();
+        tempVec3 = new Vec3();
         tempQuat = new Quat();
     }
 
     public Body createTerrainBody(final TerrainComponent terrainComponent) {
         final Vector3 goPosition = terrainComponent.gameObject.getPosition(TMP_VECTOR3);
-        final Vec3 inPosition = Jolt.New_Vec3(goPosition.x, goPosition.y, goPosition.z);
+        final Vec3 inPosition = new Vec3(goPosition.x, goPosition.y, goPosition.z);
         final Terrain terrain = terrainComponent.getTerrainAsset().getTerrain();
 
         final Vector3 vertexC00 = new Vector3();
@@ -59,10 +59,10 @@ public class BodyManager {
                 terrain.getVertexPosition(vertexC10, x + 1, z);
                 terrain.getVertexPosition(vertexC11, x + 1, z + 1);
 
-                final Vec3 c00 = Jolt.New_Vec3(vertexC00.x, vertexC00.y, vertexC00.z);
-                final Vec3 c01 = Jolt.New_Vec3(vertexC01.x, vertexC01.y, vertexC01.z);
-                final Vec3 c10 = Jolt.New_Vec3(vertexC10.x, vertexC10.y, vertexC10.z);
-                final Vec3 c11 = Jolt.New_Vec3(vertexC11.x, vertexC11.y, vertexC11.z);
+                final Vec3 c00 = new Vec3(vertexC00.x, vertexC00.y, vertexC00.z);
+                final Vec3 c01 = new Vec3(vertexC01.x, vertexC01.y, vertexC01.z);
+                final Vec3 c10 = new Vec3(vertexC10.x, vertexC10.y, vertexC10.z);
+                final Vec3 c11 = new Vec3(vertexC11.x, vertexC11.y, vertexC11.z);
 
                 Triangle triangle1 = new Triangle(c00, c11, c10);
                 Triangle triangle2 = new Triangle(c00, c01, c11);

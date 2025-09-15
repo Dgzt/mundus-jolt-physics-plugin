@@ -31,6 +31,7 @@ dependencies {
 
     api("com.github.xpenatan.xJolt:jolt-core:${project.properties["gdxJoltVersion"]}")
     api("com.github.xpenatan.xJolt:jolt-gdx:${project.properties["gdxJoltVersion"]}")
+    api("com.github.xpenatan.jParser:loader-core:${project.properties["jParserVersion"]}")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

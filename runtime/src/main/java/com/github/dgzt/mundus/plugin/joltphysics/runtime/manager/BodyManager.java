@@ -7,7 +7,7 @@ import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstant
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.BodyData;
 import com.mbrlabs.mundus.commons.scene3d.components.TerrainComponent;
 import com.mbrlabs.mundus.commons.terrain.Terrain;
-import jolt.Jolt;
+import jolt.JoltNew;
 import jolt.enums.EActivation;
 import jolt.enums.EMotionType;
 import jolt.geometry.Triangle;
@@ -79,7 +79,7 @@ public class BodyManager {
 
         }
 
-        BodyCreationSettings bodyCreationSettings = Jolt.New_BodyCreationSettings(new MeshShapeSettings(triangles), inPosition, Quat.sIdentity(), EMotionType.Static, Layers.NON_MOVING);
+        BodyCreationSettings bodyCreationSettings = JoltNew.BodyCreationSettings(new MeshShapeSettings(triangles), inPosition, Quat.sIdentity(), EMotionType.Static, Layers.NON_MOVING);
         Body terrainBody = bodyInterface.CreateBody(bodyCreationSettings);
         bodyInterface.AddBody(terrainBody.GetID(), EActivation.DontActivate);
         triangles.dispose();
@@ -172,7 +172,7 @@ public class BodyManager {
             layer = Layers.NON_MOVING;
         }
 
-        final BodyCreationSettings bodySettings = Jolt.New_BodyCreationSettings(bodyShape, position, quaternion, motionType, layer);
+        final BodyCreationSettings bodySettings = JoltNew.BodyCreationSettings(bodyShape, position, quaternion, motionType, layer);
         bodySettings.set_mMassPropertiesOverride(massProperties);
         bodySettings.set_mRestitution(restitution);
         final Body body = bodyInterface.CreateBody(bodySettings);

@@ -66,7 +66,8 @@ tasks.withType<Jar> {
         .filter {
             it.name.equals("runtime.jar") ||
             it.name.equals("jolt-core-${project.properties["gdxJoltVersion"]}.jar") ||
-            it.name.equals("jolt-gdx-${project.properties["gdxJoltVersion"]}.jar") ||
+            it.name.equals("gdx-utils-${project.properties["gdxJoltVersion"]}.jar") ||
+            it.name.equals("gdx-gl-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-desktop-${project.properties["gdxJoltVersion"]}.jar") ||
                     (it.name.startsWith("loader-core-") && it.name.endsWith(".jar"))
         }

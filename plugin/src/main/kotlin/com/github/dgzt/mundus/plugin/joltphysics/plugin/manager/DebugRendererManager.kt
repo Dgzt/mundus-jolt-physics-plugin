@@ -3,18 +3,18 @@ package com.github.dgzt.mundus.plugin.joltphysics.plugin.manager
 import com.badlogic.gdx.graphics.Camera
 import com.badlogic.gdx.utils.Disposable
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin
-import jolt.gdx.DebugRenderer
-import jolt.gdx.GdxModelBatch
+import jolt.gdx.JoltDebugRenderer
+import jolt.gdx.gl.GdxDebugRenderer
 import jolt.physics.body.BodyManagerDrawSettings
 
 class DebugRendererManager : Disposable {
 
-    var debugRenderer: DebugRenderer? = null
+    var debugRenderer: JoltDebugRenderer? = null
     var debugSettings: BodyManagerDrawSettings? = null
 
     fun render(camera: Camera) {
         if (!isDebugRendererInitialized()) {
-            debugRenderer = DebugRenderer(GdxModelBatch())
+            debugRenderer = GdxDebugRenderer()
             debugSettings = BodyManagerDrawSettings()
         }
 

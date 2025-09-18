@@ -30,8 +30,8 @@ dependencies {
     api("com.github.jamestkhan.mundus:commons:${project.properties["mundusVersion"]}")
 
     api("com.github.xpenatan.xJolt:jolt-core:${project.properties["gdxJoltVersion"]}")
-    api("com.github.xpenatan.xJolt:jolt-gdx:${project.properties["gdxJoltVersion"]}")
-    api("com.github.xpenatan.jParser:loader-core:${project.properties["jParserVersion"]}")
+    api("com.github.xpenatan.xJolt:gdx-utils:${project.properties["gdxJoltVersion"]}")
+    api("com.github.xpenatan.xJolt:gdx-gl:${project.properties["gdxJoltVersion"]}")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

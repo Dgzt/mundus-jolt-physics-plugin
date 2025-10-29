@@ -50,7 +50,7 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
         if (body != null && EMotionType.Dynamic.equals(body.GetMotionType())) {
             final Mat44 mat44 = body.GetWorldTransform();
             tempMatrix4.idt();
-            JoltGdx.mat44_to_matrix4(mat44, tempMatrix4);
+            JoltGdx.convert(mat44, tempMatrix4);
 
             final Vector3 position = tempMatrix4.getTranslation(tempPosition);
             gameObject.setLocalPosition(position.x, position.y, position.z);

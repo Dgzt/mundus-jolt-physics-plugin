@@ -146,7 +146,7 @@ public class ComponentManager implements Disposable {
     }
 
     public AbstractJoltPhysicsComponent rayCast(final Ray sceneRay) {
-        sceneRay.getEndPoint(TMP_RAY_END, 1000);
+        sceneRay.getEndPoint(TMP_RAY_END, 10000);
         final Vec3 rayOrigin = new Vec3(sceneRay.origin.x, sceneRay.origin.y, sceneRay.origin.z);
         final Vec3 rayDirection = new Vec3(TMP_RAY_END.x, TMP_RAY_END.y, TMP_RAY_END.z);
 

@@ -13,6 +13,7 @@ import jolt.enums.EMotionType;
 import jolt.gdx.JoltGdx;
 import jolt.math.Mat44;
 import jolt.physics.body.Body;
+import jolt.physics.body.BodyID;
 import jolt.physics.collision.shape.Shape;
 
 public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implements Disposable {
@@ -38,6 +39,11 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
         this.shapeType = shapeType;
         this.shape = shape;
         this.body = body;
+    }
+
+    @Override
+    public BodyID getBodyID() {
+        return body.GetID();
     }
 
     @Override

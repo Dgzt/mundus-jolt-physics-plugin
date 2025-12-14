@@ -86,7 +86,7 @@ public class JoltPhysicsPlugin {
         physicsSystem.Init(mMaxBodies, cNumBodyMutexes, mMaxBodyPairs, mMaxContactConstraints, mBroadPhaseLayerInterface, mObjectVsBroadPhaseLayerFilter, mObjectLayerPairFilter);
 
         bodyManager = new BodyManager(physicsSystem.GetBodyInterface());
-        componentManager = new ComponentManager(bodyManager);
+        componentManager = new ComponentManager(bodyManager, physicsSystem.GetNarrowPhaseQuery());
 
         updateCallback = config.updateCallback;
     }

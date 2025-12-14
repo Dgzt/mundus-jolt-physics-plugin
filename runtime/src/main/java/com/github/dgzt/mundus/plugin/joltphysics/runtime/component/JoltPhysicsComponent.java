@@ -43,7 +43,7 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
 
     @Override
     public BodyID getBodyID() {
-        return body.GetID();
+        return (body != null) ? body.GetID() : null;
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltP
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.BodyData;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.RayCastResult;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.type.ShapeType;
 import com.mbrlabs.mundus.commons.scene3d.GameObject;
 import com.mbrlabs.mundus.commons.scene3d.components.Component;
@@ -29,6 +30,7 @@ public class ComponentManager implements Disposable {
     private static final Vector3 TMP_POSITION = new Vector3();
     private static final Quaternion TMP_QUATERNION = new Quaternion();
     private static final Vector3 TMP_RAY_END = new Vector3();
+    private static final RayCastResult RAY_CAST_RESULT = new RayCastResult();
 
     private final BodyManager bodyManager;
     private final NarrowPhaseQuery narrowPhaseQuery;
@@ -145,7 +147,7 @@ public class ComponentManager implements Disposable {
         components.removeValue(component, true);
     }
 
-    public AbstractJoltPhysicsComponent rayCast(final Ray sceneRay) {
+    public RayCastResult rayCast(final Ray sceneRay) {
         sceneRay.getEndPoint(TMP_RAY_END, 10000);
         final Vec3 rayOrigin = new Vec3(sceneRay.origin.x, sceneRay.origin.y, sceneRay.origin.z);
         final Vec3 rayDirection = new Vec3(TMP_RAY_END.x, TMP_RAY_END.y, TMP_RAY_END.z);
@@ -156,7 +158,7 @@ public class ComponentManager implements Disposable {
 
         narrowPhaseQuery.CastRay(ray, settings, collector);
 
-        AbstractJoltPhysicsComponent result = null;
+        RayCastResult result = null;
 
         if (collector.HadHit()) {
             final BodyID bodyID = collector.get_mHit().get_mBodyID();
@@ -164,7 +166,13 @@ public class ComponentManager implements Disposable {
                 final AbstractJoltPhysicsComponent component = components.get(i);
                 final BodyID componentBodyId = component.getBodyID();
                 if (componentBodyId != null && componentBodyId.GetIndexAndSequenceNumber() == bodyID.GetIndexAndSequenceNumber()) {
-                    result = component;
+                    final Vec3 contactPoint = ray.GetPointOnRay(collector.get_mHit().get_mFraction());
+
+                    result = RAY_CAST_RESULT;
+                    result.setComponent(component);
+                    result.setContactPointX(contactPoint.GetX());
+                    result.setContactPointY(contactPoint.GetY());
+                    result.setContactPointZ(contactPoint.GetZ());
                     break;
                 }
             }

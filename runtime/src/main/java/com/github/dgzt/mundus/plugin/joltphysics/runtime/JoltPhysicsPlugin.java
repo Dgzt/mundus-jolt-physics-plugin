@@ -28,9 +28,9 @@ public class JoltPhysicsPlugin {
     private final ObjectVsBroadPhaseLayerFilterTable objectVsBroadPhaseLayerFilter;
     private final BroadPhaseLayer BP_LAYER_NON_MOVING;
     private final BroadPhaseLayer BP_LAYER_MOVING;
-    private final ObjectLayerPairFilterTable mObjectLayerPairFilter;
+    private final ObjectLayerPairFilterTable objectLayerPairFilter;
     private final BroadPhaseLayerInterfaceTable mBroadPhaseLayerInterface;
-    private TempAllocatorImpl mTempAllocator;
+    private TempAllocatorImpl tempAllocator;
     private JobSystemThreadPool mJobSystem;
 
     private final BodyManager bodyManager;
@@ -52,9 +52,9 @@ public class JoltPhysicsPlugin {
         // layers if you want. E.g. you could have a layer for high detail collision (which is not used by the physics simulation
         // but only if you do collision testing).
 
-        mObjectLayerPairFilter = new ObjectLayerPairFilterTable(Layers.NUM_LAYERS);
-        mObjectLayerPairFilter.EnableCollision(Layers.NON_MOVING, Layers.MOVING);
-        mObjectLayerPairFilter.EnableCollision(Layers.MOVING, Layers.MOVING);
+        objectLayerPairFilter = new ObjectLayerPairFilterTable(Layers.NUM_LAYERS);
+        objectLayerPairFilter.EnableCollision(Layers.NON_MOVING, Layers.MOVING);
+        objectLayerPairFilter.EnableCollision(Layers.MOVING, Layers.MOVING);
 
         // Each broadphase layer results in a separate bounding volume tree in the broad phase. You at least want to have
         // a layer for non-moving and moving objects to avoid having to update a tree full of static objects every frame.
@@ -69,10 +69,10 @@ public class JoltPhysicsPlugin {
         BP_LAYER_MOVING = new BroadPhaseLayer((short)1);
         mBroadPhaseLayerInterface.MapObjectToBroadPhaseLayer(Layers.MOVING, BP_LAYER_MOVING);
 
-        objectVsBroadPhaseLayerFilter = new ObjectVsBroadPhaseLayerFilterTable(mBroadPhaseLayerInterface, NUM_BROAD_PHASE_LAYERS, mObjectLayerPairFilter, Layers.NUM_LAYERS);
+        objectVsBroadPhaseLayerFilter = new ObjectVsBroadPhaseLayerFilterTable(mBroadPhaseLayerInterface, NUM_BROAD_PHASE_LAYERS, objectLayerPairFilter, Layers.NUM_LAYERS);
 
 
-        mTempAllocator = new TempAllocatorImpl(mTempAllocatorSize);
+        tempAllocator = new TempAllocatorImpl(mTempAllocatorSize);
 
         int cMaxPhysicsJobs = 2048;
         int cMaxPhysicsBarriers = 8;
@@ -83,7 +83,7 @@ public class JoltPhysicsPlugin {
         Factory.set_sInstance(factory);
         Jolt.RegisterTypes();
         physicsSystem = new PhysicsSystem();
-        physicsSystem.Init(mMaxBodies, cNumBodyMutexes, mMaxBodyPairs, mMaxContactConstraints, mBroadPhaseLayerInterface, objectVsBroadPhaseLayerFilter, mObjectLayerPairFilter);
+        physicsSystem.Init(mMaxBodies, cNumBodyMutexes, mMaxBodyPairs, mMaxContactConstraints, mBroadPhaseLayerInterface, objectVsBroadPhaseLayerFilter, objectLayerPairFilter);
 
         bodyManager = new BodyManager(physicsSystem.GetBodyInterface());
         componentManager = new ComponentManager(bodyManager, physicsSystem.GetNarrowPhaseQuery());
@@ -124,6 +124,14 @@ public class JoltPhysicsPlugin {
         return INSTANCE.objectVsBroadPhaseLayerFilter;
     }
 
+    public static ObjectLayerPairFilterTable getObjectLayerPairFilter() {
+        return INSTANCE.objectLayerPairFilter;
+    }
+
+    public static TempAllocatorImpl getTempAllocator() {
+        return INSTANCE.tempAllocator;
+    }
+
     public static void update() {
         final Array<AbstractJoltPhysicsComponent> components = getComponentManager().getComponents();
 
@@ -131,7 +139,7 @@ public class JoltPhysicsPlugin {
             components.get(i).prePhysicsUpdate();
         }
 
-        INSTANCE.updateCallback.update(INSTANCE.mTempAllocator, INSTANCE.mJobSystem);
+        INSTANCE.updateCallback.update(INSTANCE.tempAllocator, INSTANCE.mJobSystem);
 
         for (int i = 0; i < components.size; ++i) {
             components.get(i).postPhysicsUpdate();
@@ -146,7 +154,7 @@ public class JoltPhysicsPlugin {
         INSTANCE.physicsSystem.dispose();
         INSTANCE.BP_LAYER_NON_MOVING.dispose();
         INSTANCE.BP_LAYER_MOVING.dispose();
-        INSTANCE.mObjectLayerPairFilter.dispose();
+        INSTANCE.objectLayerPairFilter.dispose();
 
         Factory.set_sInstance(Factory.NULL);
         INSTANCE.factory.dispose();

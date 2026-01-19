@@ -25,7 +25,7 @@ public class JoltPhysicsPlugin {
 
     private PhysicsSystem physicsSystem;
     private Factory factory;
-    private final ObjectVsBroadPhaseLayerFilterTable mObjectVsBroadPhaseLayerFilter;
+    private final ObjectVsBroadPhaseLayerFilterTable objectVsBroadPhaseLayerFilter;
     private final BroadPhaseLayer BP_LAYER_NON_MOVING;
     private final BroadPhaseLayer BP_LAYER_MOVING;
     private final ObjectLayerPairFilterTable mObjectLayerPairFilter;
@@ -69,7 +69,7 @@ public class JoltPhysicsPlugin {
         BP_LAYER_MOVING = new BroadPhaseLayer((short)1);
         mBroadPhaseLayerInterface.MapObjectToBroadPhaseLayer(Layers.MOVING, BP_LAYER_MOVING);
 
-        mObjectVsBroadPhaseLayerFilter = new ObjectVsBroadPhaseLayerFilterTable(mBroadPhaseLayerInterface, NUM_BROAD_PHASE_LAYERS, mObjectLayerPairFilter, Layers.NUM_LAYERS);
+        objectVsBroadPhaseLayerFilter = new ObjectVsBroadPhaseLayerFilterTable(mBroadPhaseLayerInterface, NUM_BROAD_PHASE_LAYERS, mObjectLayerPairFilter, Layers.NUM_LAYERS);
 
 
         mTempAllocator = new TempAllocatorImpl(mTempAllocatorSize);
@@ -83,7 +83,7 @@ public class JoltPhysicsPlugin {
         Factory.set_sInstance(factory);
         Jolt.RegisterTypes();
         physicsSystem = new PhysicsSystem();
-        physicsSystem.Init(mMaxBodies, cNumBodyMutexes, mMaxBodyPairs, mMaxContactConstraints, mBroadPhaseLayerInterface, mObjectVsBroadPhaseLayerFilter, mObjectLayerPairFilter);
+        physicsSystem.Init(mMaxBodies, cNumBodyMutexes, mMaxBodyPairs, mMaxContactConstraints, mBroadPhaseLayerInterface, objectVsBroadPhaseLayerFilter, mObjectLayerPairFilter);
 
         bodyManager = new BodyManager(physicsSystem.GetBodyInterface());
         componentManager = new ComponentManager(bodyManager, physicsSystem.GetNarrowPhaseQuery());
@@ -118,6 +118,10 @@ public class JoltPhysicsPlugin {
 
     public static ComponentManager getComponentManager() {
         return INSTANCE.componentManager;
+    }
+
+    public static ObjectVsBroadPhaseLayerFilterTable getObjectVsBroadPhaseLayerFilter() {
+        return INSTANCE.objectVsBroadPhaseLayerFilter;
     }
 
     public static void update() {

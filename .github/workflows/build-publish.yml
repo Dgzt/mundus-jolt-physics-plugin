@@ -23,3 +23,5 @@ jobs:
           architecture: x64
       - name: Build
         run: ./gradlew build
+      - name: Check
+        run: ./gradlew check

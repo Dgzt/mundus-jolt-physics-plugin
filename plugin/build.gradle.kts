@@ -49,14 +49,14 @@ java {
 tasks.withType<Jar> {
     dependsOn(":runtime:jar")
 
-    archiveFileName.set("jolt-physics-plugin.jar")
+    archiveFileName.set("jolt-physics-plugin-${project.properties["pluginVersion"]}.jar")
 
     // Otherwise you'll get a "No main manifest attribute" error
     manifest {
         attributes["Plugin-Class"]= "com.github.dgzt.mundus.plugin.joltphysics.plugin.JoltPhysicsEditorPlugin"
         attributes["Plugin-Id"] = "jolt-physics-plugin"
         attributes["Plugin-Provider"] = "Tibor Zsuro (Dgzt)"
-        attributes["Plugin-Version"] = "0.0.1"
+        attributes["Plugin-Version"] = "${project.properties["pluginVersion"]}"
     }
 
     // Include runtime in jar file

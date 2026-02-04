@@ -101,6 +101,10 @@ public class JoltPhysicsPlugin {
             initResult.setException(exception);
         });
 
+        if (initResult.isSuccess()) {
+            INSTANCE = new JoltPhysicsPlugin(config);
+        }
+
         return initResult;
     }
 

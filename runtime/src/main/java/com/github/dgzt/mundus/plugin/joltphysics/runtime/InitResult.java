@@ -6,9 +6,7 @@ public class InitResult {
 
     private Exception exception;
 
-    public InitResult(final boolean success, final Exception exception) {
-        this.success = success;
-        this.exception = exception;
+    public InitResult() {
     }
 
     public boolean isSuccess() {

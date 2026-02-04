@@ -23,8 +23,8 @@ class JoltPhysicsEditorPlugin : Plugin() {
 
     override fun start() {
         Gdx.app.log(PluginConstants.LOG_TAG, "Start Jolt Physics plugin")
-        var initResult = JoltPhysicsPlugin.init().get()
-        Gdx.app.log(PluginConstants.LOG_TAG, "Jolt Physics loaded: " + initResult.isSuccess)
+        val initResult = JoltPhysicsPlugin.init()
+        Gdx.app.debug(PluginConstants.LOG_TAG, "Jolt Physics loaded: " + initResult.isSuccess)
 
         PropertyManager.joltPhysicsLoaded = initResult.isSuccess
 

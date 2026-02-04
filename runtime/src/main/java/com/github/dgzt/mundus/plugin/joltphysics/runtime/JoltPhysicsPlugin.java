@@ -17,8 +17,6 @@ import jolt.physics.collision.broadphase.BroadPhaseLayer;
 import jolt.physics.collision.broadphase.BroadPhaseLayerInterfaceTable;
 import jolt.physics.collision.broadphase.ObjectVsBroadPhaseLayerFilterTable;
 
-import java.util.concurrent.CompletableFuture;
-
 public class JoltPhysicsPlugin {
 
     private static JoltPhysicsPlugin INSTANCE = null;
@@ -91,21 +89,19 @@ public class JoltPhysicsPlugin {
         updateCallback = config.updateCallback;
     }
 
-    public static CompletableFuture<InitResult> init() {
+    public static InitResult init() {
         return init(new RuntimeConfig());
     }
 
-    public static CompletableFuture<InitResult> init(final RuntimeConfig config) {
-        final CompletableFuture<InitResult> future = new CompletableFuture<InitResult>();
+    public static InitResult init(final RuntimeConfig config) {
+        final InitResult initResult = new InitResult();
 
-        JoltLoader.init((joltSuccess, exception) -> {
-            if (joltSuccess) {
-                INSTANCE = new JoltPhysicsPlugin(config);
-            }
-            future.complete(new InitResult(joltSuccess, exception));
+        JoltLoader.initSync((joltSuccess, exception) -> {
+            initResult.setSuccess(joltSuccess);
+            initResult.setException(exception);
         });
 
-        return future;
+        return initResult;
     }
 
     public static PhysicsSystem getPhysicsSystem() {

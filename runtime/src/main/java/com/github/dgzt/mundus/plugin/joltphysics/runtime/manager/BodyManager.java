@@ -79,7 +79,7 @@ public class BodyManager {
 
         }
 
-        BodyCreationSettings bodyCreationSettings = JoltNew.BodyCreationSettings(new MeshShapeSettings(triangles), inPosition, Quat.sIdentity(), EMotionType.Static, Layers.NON_MOVING);
+        BodyCreationSettings bodyCreationSettings = JoltNew.BodyCreationSettings(JoltNew.MeshShapeSettings(triangles), inPosition, Quat.sIdentity(), EMotionType.Static, Layers.NON_MOVING);
         Body terrainBody = bodyInterface.CreateBody(bodyCreationSettings);
         bodyInterface.AddBody(terrainBody.GetID(), EActivation.DontActivate);
         triangles.dispose();

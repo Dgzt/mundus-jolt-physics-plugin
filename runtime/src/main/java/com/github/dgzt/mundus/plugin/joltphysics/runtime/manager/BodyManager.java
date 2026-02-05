@@ -27,6 +27,7 @@ import jolt.physics.collision.shape.SphereShape;
 
 public class BodyManager {
 
+    private static final float TERRAIN_FRICTION = 1.0f;
     private static final Vector3 TMP_VECTOR3 = new Vector3();
 
     private final float restitution = 0.8f;
@@ -86,7 +87,7 @@ public class BodyManager {
         bodyCreationSettings.dispose();
         inPosition.dispose();
 
-        terrainBody.SetFriction(1.0f);
+        terrainBody.SetFriction(TERRAIN_FRICTION);
 
         return terrainBody;
     }

@@ -47,7 +47,7 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
     }
 
     @Override
-    public void prePhysicsUpdate() {
+    public void prePhysicsUpdate(final float delta) {
         // NOOP
     }
 

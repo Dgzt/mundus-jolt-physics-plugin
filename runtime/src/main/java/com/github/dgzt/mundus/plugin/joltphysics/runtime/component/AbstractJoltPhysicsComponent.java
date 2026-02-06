@@ -18,7 +18,7 @@ public abstract class AbstractJoltPhysicsComponent extends AbstractComponent {
 
     public abstract BodyID getBodyID();
 
-    public abstract void prePhysicsUpdate();
+    public abstract void prePhysicsUpdate(float delta);
 
     public abstract void postPhysicsUpdate();
 }

@@ -34,15 +34,13 @@ public class JoltPhysicsPlugin {
     private final BodyManager bodyManager;
     private final ComponentManager componentManager;
 
-    private final UpdateCallback updateCallback;
-
     private JoltPhysicsPlugin(final RuntimeConfig config) {
         Jolt.Init();
 
-        int mMaxBodies = 10240;
-        int mMaxBodyPairs = 65536;
-        int mMaxContactConstraints = 10240;
-        int mTempAllocatorSize = 10 * 1024 * 1024;
+        int mMaxBodies = config.maxBodies;
+        int mMaxBodyPairs = config.maxBodyPairs;
+        int mMaxContactConstraints = config.maxContactConstraints;
+        int mTempAllocatorSize = config.tempAllocatorSize;
         int cNumBodyMutexes = 0;
 
         // Layer that objects can be in, determines which other objects it can collide with
@@ -85,8 +83,6 @@ public class JoltPhysicsPlugin {
 
         bodyManager = new BodyManager(physicsSystem.GetBodyInterface());
         componentManager = new ComponentManager(bodyManager, physicsSystem.GetNarrowPhaseQuery());
-
-        updateCallback = config.updateCallback;
     }
 
     public static InitResult init() {
@@ -132,17 +128,24 @@ public class JoltPhysicsPlugin {
         return INSTANCE.tempAllocator;
     }
 
-    public static void update() {
+    public static void update(final float originalDelta) {
         final Array<AbstractJoltPhysicsComponent> components = getComponentManager().getComponents();
 
-        for (int i = 0; i < components.size; ++i) {
-            components.get(i).prePhysicsUpdate();
-        }
+        // Don't go below 30 Hz to prevent spiral of death
+        float deltaTime = (float)Math.min(originalDelta, 1.0 / 30.0);
 
-        INSTANCE.updateCallback.update(INSTANCE.tempAllocator, INSTANCE.mJobSystem);
+        if (deltaTime > 0) {
+            for (int i = 0; i < components.size; ++i) {
+                components.get(i).prePhysicsUpdate(deltaTime);
+            }
 
-        for (int i = 0; i < components.size; ++i) {
-            components.get(i).postPhysicsUpdate();
+            // When running below 55 Hz, do 2 steps instead of 1
+            final int numSteps = deltaTime > 1.0 / 55.0 ? 2 : 1;
+            INSTANCE.physicsSystem.Update(deltaTime, numSteps, INSTANCE.tempAllocator, INSTANCE.mJobSystem);
+
+            for (int i = 0; i < components.size; ++i) {
+                components.get(i).postPhysicsUpdate();
+            }
         }
     }
 

@@ -4,7 +4,7 @@ public class InitResult {
 
     private boolean success;
 
-    private Exception exception;
+    private Throwable exception;
 
     public InitResult() {
     }
@@ -17,11 +17,11 @@ public class InitResult {
         this.success = success;
     }
 
-    public Exception getException() {
+    public Throwable getException() {
         return exception;
     }
 
-    public void setException(final Exception exception) {
+    public void setException(final Throwable exception) {
         this.exception = exception;
     }
 }

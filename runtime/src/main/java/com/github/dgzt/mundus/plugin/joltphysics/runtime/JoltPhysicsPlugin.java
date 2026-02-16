@@ -92,7 +92,7 @@ public class JoltPhysicsPlugin {
     public static InitResult init(final RuntimeConfig config) {
         final InitResult initResult = new InitResult();
 
-        JoltLoader.initSync((joltSuccess, exception) -> {
+        JoltLoader.init((joltSuccess, exception) -> {
             initResult.setSuccess(joltSuccess);
             initResult.setException(exception);
         });

@@ -70,6 +70,8 @@ tasks.withType<Jar> {
             it.name.equals("gdx-gl-${project.properties["gdxJoltVersion"]}.jar") ||
             it.name.equals("jolt-desktop-${project.properties["gdxJoltVersion"]}.jar") ||
             (it.name.startsWith("idl-core-") && it.name.endsWith(".jar")) ||
+            (it.name.startsWith("idl-helper-core-") && it.name.endsWith(".jar")) ||
+            (it.name.startsWith("idl-helper-desktop-") && it.name.endsWith(".jar")) ||
             (it.name.startsWith("loader-core-") && it.name.endsWith(".jar"))
         }
         .map(::zipTree)

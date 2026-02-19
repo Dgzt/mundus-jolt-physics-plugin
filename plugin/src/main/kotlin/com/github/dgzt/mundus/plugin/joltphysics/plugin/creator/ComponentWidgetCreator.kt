@@ -17,10 +17,12 @@ object ComponentWidgetCreator {
     private const val BOX = "Box"
     private const val SPHERE = "Sphere"
     private const val CYLINDER = "Cylinder"
+    private const val CAPSULE = "Capsule"
 
     private val boxWidgetCreator = ComponentBoxWidgetCreator()
     private val sphereWidgetCreator = ComponentSphereWidgetCreator()
     private val cylinderWidgetCreator = ComponentCylinderWidgetCreator()
+    private val capsuleWidgetCreator = ComponentCapsuleWidgetCreator()
 
     fun setup(component: JoltPhysicsComponent, rootWidget: RootWidget) {
         if (GameObjectUtils.isModelGameObject(component.gameObject)) {
@@ -33,9 +35,7 @@ object ComponentWidgetCreator {
         var innerWidgetCell: RootWidgetCell? = null
 
         val types = Array<String>()
-        types.add(BOX)
-        types.add(SPHERE)
-        types.add(CYLINDER)
+        types.addAll(BOX, SPHERE, CYLINDER, CAPSULE)
         rootWidget.addSelectBox(types, getSelectBoxType(component)) {
             innerWidgetCell!!.rootWidget!!.clearWidgets()
 
@@ -48,6 +48,7 @@ object ComponentWidgetCreator {
                 BOX -> changeToBox(component, modelComponent, innerWidgetCell!!)
                 SPHERE -> changeToSphere(component, modelComponent, innerWidgetCell!!)
                 CYLINDER -> changeToCylinder(component, modelComponent, innerWidgetCell!!)
+                CAPSULE -> changeToCapsule(component, modelComponent, innerWidgetCell!!)
                 else -> throw RuntimeException("Unsupported model type!")
             }
         }
@@ -60,6 +61,7 @@ object ComponentWidgetCreator {
             ShapeType.BOX -> boxWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
             ShapeType.SPHERE -> sphereWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
             ShapeType.CYLINDER -> cylinderWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
+            ShapeType.CAPSULE -> capsuleWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
             else -> throw RuntimeException("Unsupported model type!")
         }
 
@@ -137,5 +139,27 @@ object ComponentWidgetCreator {
         cylinderWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
     }
 
+    private fun changeToCapsule(
+        component: JoltPhysicsComponent,
+        modelComponent: ModelComponent,
+        innerWidgetCell: RootWidgetCell
+    ) {
+        // Create static capsule geom
+        val goScale = modelComponent.gameObject.getScale(Vector3())
+        val goPosition = modelComponent.gameObject.getPosition(Vector3())
+        val goRotation = modelComponent.gameObject.getRotation(Quaternion())
+        val boundingBox = modelComponent.orientedBoundingBox.bounds
+        val radius = Math.max(boundingBox.width * goScale.x, boundingBox.depth * goScale.z) / 2.0f
+        var height = boundingBox.height * goScale.y
+        if (height < radius * 2.0f) {
+            height = radius * 2.0f
+        }
 
+        val bodyData = JoltPhysicsPlugin.getBodyManager().createCapsuleBody(goPosition, radius, height, goRotation)
+        component.shapeType = ShapeType.CAPSULE
+        component.shape = bodyData.shape
+        component.body = bodyData.body
+
+        capsuleWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
+    }
 }

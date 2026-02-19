@@ -156,6 +156,13 @@ public class BodyManager {
     }
 
     public BodyData createCapsuleBody(final Vector3 position,
+                                      final float radius,
+                                      final float height,
+                                      final Quaternion quaternion) {
+        return createCapsuleBody(position, radius, height, quaternion, PluginConstants.STATIC_OBJECT_MASS);
+    }
+
+    public BodyData createCapsuleBody(final Vector3 position,
                                   final float radius,
                                   final float height,
                                   final Quaternion quaternion,

@@ -9,78 +9,79 @@ import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.BodyData
 import com.mbrlabs.mundus.pluginapi.ui.RootWidget
 import com.mbrlabs.mundus.pluginapi.ui.RootWidgetCell
 import com.mbrlabs.mundus.pluginapi.ui.WidgetAlign
-import jolt.physics.collision.shape.BoxShape
+import jolt.physics.collision.shape.CylinderShape
 
-class ComponentBoxWidgetCreator : BaseComponentWidgetCreator() {
+class ComponentCylinderWidgetCreator : BaseComponentWidgetCreator() {
 
     override fun addWidgets(component: JoltPhysicsComponent, rootWidget: RootWidget) {
-        var boxShape = component.shape as BoxShape
-        var halfExtend = boxShape.GetHalfExtent()
+        var cylinderShape = component.shape as CylinderShape
+        var radius = cylinderShape.GetRadius()
+        var height = cylinderShape.GetHalfHeight() * 2f
         var static = component.isStatic
 
         var massParentWidgetCell: RootWidgetCell? = null
         var mass = if (static) PluginConstants.STATIC_OBJECT_MASS else component.mass
         rootWidget.addCheckbox("Static", static) {
-            boxShape = component.shape as BoxShape
-            halfExtend = boxShape.GetHalfExtent()
+            cylinderShape = component.shape as CylinderShape
+            radius = cylinderShape.GetRadius()
+            height = cylinderShape.GetHalfHeight() * 2f
             static = it
-
-            reCreateBoxBody(component, static, halfExtend.GetX() * 2f, halfExtend.GetY() * 2f, halfExtend.GetZ() * 2f)
 
             if (static) {
                 mass = PluginConstants.STATIC_OBJECT_MASS
                 massParentWidgetCell?.rootWidget?.clearWidgets()
+
+                reCreateCylinderBody(component, static, radius, height)
             } else {
                 mass = PluginConstants.DEFAULT_OBJECT_MASS
                 createMassSpinner(massParentWidgetCell!!.rootWidget, mass) { newMass ->
                     run {
-                        boxShape = component.shape as BoxShape
-                        halfExtend = boxShape.GetHalfExtent()
+                        cylinderShape = component.shape as CylinderShape
+                        radius = cylinderShape.GetRadius()
+                        height = cylinderShape.GetHalfHeight() * 2f
                         mass = newMass
 
-                        reCreateBoxBody(component, static, halfExtend.GetX() * 2f, halfExtend.GetY() * 2f, halfExtend.GetZ() * 2f)
+                        reCreateCylinderBody(component, static, radius, height, mass)
                     }
                 }
+
+                reCreateCylinderBody(component, static, radius, height, mass)
             }
         }.setAlign(WidgetAlign.LEFT).setPad(0.0f, 0.0f, STATIC_BOTTOM_PAD, 0.0f)
         rootWidget.addRow()
         rootWidget.addLabel("Size:").grow().setAlign(WidgetAlign.LEFT)
         rootWidget.addRow()
-        rootWidget.addSpinner("Width", 0.1f, Float.MAX_VALUE, halfExtend.GetX() * 2f, 0.1f) {
-            boxShape = component.shape as BoxShape
-            halfExtend = boxShape.GetHalfExtent()
+        rootWidget.addSpinner("Radius", 0.1f, Float.MAX_VALUE, radius, 0.1f) {
+            cylinderShape = component.shape as CylinderShape
+            radius = it
+            height = cylinderShape.GetHalfHeight() * 2f
 
-            reCreateBoxBody(component, static, it, halfExtend.GetY() * 2f, halfExtend.GetZ() * 2f)
+            reCreateCylinderBody(component, static, radius, height, mass)
         }.grow().setPad(0.0f, SIZE_RIGHT_PAD, 0.0f, 0.0f)
-        rootWidget.addSpinner("Height", 0.1f, Float.MAX_VALUE, halfExtend.GetY() * 2f, 0.1f) {
-            boxShape = component.shape as BoxShape
-            halfExtend = boxShape.GetHalfExtent()
+        rootWidget.addSpinner("Height", 0.1f, Float.MAX_VALUE, height, 0.1f) {
+            cylinderShape = component.shape as CylinderShape
+            height = it
 
-            reCreateBoxBody(component, static, halfExtend.GetX() * 2f, it, halfExtend.GetZ() * 2f)
-        }.grow().setPad(0.0f, SIZE_RIGHT_PAD, 0.0f, 0.0f)
-        rootWidget.addSpinner("Depth", 0.1f, Float.MAX_VALUE, halfExtend.GetZ() * 2f, 0.1f) {
-            boxShape = component.shape as BoxShape
-            halfExtend = boxShape.GetHalfExtent()
-
-            reCreateBoxBody(component, static, halfExtend.GetX() * 2f, halfExtend.GetY() * 2f, it)
-        }.grow()
+            reCreateCylinderBody(component, static, radius, height, mass)
+        }.setAlign(WidgetAlign.LEFT)
+        rootWidget.addEmptyWidget().grow()
         rootWidget.addRow()
         massParentWidgetCell = rootWidget.addEmptyWidget()
         massParentWidgetCell.grow().setAlign(WidgetAlign.LEFT)
         if (!static) {
             createMassSpinner(massParentWidgetCell.rootWidget, mass) { newMass ->
                 run {
-                    boxShape = component.shape as BoxShape
-                    halfExtend = boxShape.GetHalfExtent()
+                    cylinderShape = component.shape as CylinderShape
+                    radius = cylinderShape.GetRadius()
                     mass = newMass
 
-                    reCreateBoxBody(component, static, halfExtend.GetX() * 2f, halfExtend.GetY() * 2f, halfExtend.GetZ() * 2f)
+                    reCreateCylinderBody(component, static, radius, height, mass)
                 }
             }
         }
     }
 
-    private fun reCreateBoxBody(component: JoltPhysicsComponent, static: Boolean, width: Float, height: Float, depth: Float, mass: Float = PluginConstants.STATIC_OBJECT_MASS) {
+    private fun reCreateCylinderBody(component: JoltPhysicsComponent, static: Boolean, radius: Float, height: Float, mass: Float = PluginConstants.STATIC_OBJECT_MASS) {
         val bodyInterface = JoltPhysicsPlugin.getPhysicsSystem().GetBodyInterface()
         val body = component.body
 
@@ -92,9 +93,9 @@ class ComponentBoxWidgetCreator : BaseComponentWidgetCreator() {
 
         val bodyData: BodyData
         if (static) {
-            bodyData = JoltPhysicsPlugin.getBodyManager().createBoxBody(goPosition, width, height, depth, goRotation)
+            bodyData = JoltPhysicsPlugin.getBodyManager().createCylinderBody(goPosition, radius, height, goRotation)
         } else {
-            bodyData = JoltPhysicsPlugin.getBodyManager().createBoxBody(goPosition, width, height, depth, goRotation, mass)
+            bodyData = JoltPhysicsPlugin.getBodyManager().createCylinderBody(goPosition, radius, height, goRotation, mass)
         }
 
         component.body = bodyData.body

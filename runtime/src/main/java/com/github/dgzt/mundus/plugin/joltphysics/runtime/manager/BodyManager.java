@@ -136,6 +136,13 @@ public class BodyManager {
     public BodyData createCylinderBody(final Vector3 position,
                                    final float radius,
                                    final float height,
+                                   final Quaternion quaternion) {
+        return createCylinderBody(position, radius, height, quaternion, PluginConstants.STATIC_OBJECT_MASS);
+    }
+
+    public BodyData createCylinderBody(final Vector3 position,
+                                   final float radius,
+                                   final float height,
                                    final Quaternion quaternion,
                                    final float mass) {
         final CylinderShape shape = new CylinderShape(height / 2f, radius);

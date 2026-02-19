@@ -16,7 +16,6 @@ class ComponentSphereWidgetCreator : BaseComponentWidgetCreator() {
     override fun addWidgets(component: JoltPhysicsComponent, rootWidget: RootWidget) {
         var sphereShape = component.shape as SphereShape
         var radius = sphereShape.GetRadius()
-
         var static = component.isStatic
 
         var massParentWidgetCell: RootWidgetCell? = null
@@ -49,12 +48,13 @@ class ComponentSphereWidgetCreator : BaseComponentWidgetCreator() {
         rootWidget.addRow()
         rootWidget.addLabel("Size:").grow().setAlign(WidgetAlign.LEFT)
         rootWidget.addRow()
-        rootWidget.addSpinner("Radius", 0.1f, Float.MAX_VALUE, sphereShape.GetRadius(), 0.1f) {
+        rootWidget.addSpinner("Radius", 0.1f, Float.MAX_VALUE, radius, 0.1f) {
             sphereShape = component.shape as SphereShape
             radius = it
 
             reCreateSphereBody(component, static, radius, mass)
         }.grow().setPad(0.0f, SIZE_RIGHT_PAD, 0.0f, 0.0f)
+        rootWidget.addEmptyWidget().grow()
         rootWidget.addRow()
         massParentWidgetCell = rootWidget.addEmptyWidget()
         massParentWidgetCell.grow().setAlign(WidgetAlign.LEFT)

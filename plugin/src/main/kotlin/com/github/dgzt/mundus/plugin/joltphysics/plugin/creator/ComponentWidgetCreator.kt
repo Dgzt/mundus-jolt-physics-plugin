@@ -16,9 +16,11 @@ object ComponentWidgetCreator {
 
     private const val BOX = "Box"
     private const val SPHERE = "Sphere"
+    private const val CYLINDER = "Cylinder"
 
     private val boxWidgetCreator = ComponentBoxWidgetCreator()
     private val sphereWidgetCreator = ComponentSphereWidgetCreator()
+    private val cylinderWidgetCreator = ComponentCylinderWidgetCreator()
 
     fun setup(component: JoltPhysicsComponent, rootWidget: RootWidget) {
         if (GameObjectUtils.isModelGameObject(component.gameObject)) {
@@ -33,6 +35,7 @@ object ComponentWidgetCreator {
         val types = Array<String>()
         types.add(BOX)
         types.add(SPHERE)
+        types.add(CYLINDER)
         rootWidget.addSelectBox(types, getSelectBoxType(component)) {
             innerWidgetCell!!.rootWidget!!.clearWidgets()
 
@@ -44,6 +47,7 @@ object ComponentWidgetCreator {
             when (it) {
                 BOX -> changeToBox(component, modelComponent, innerWidgetCell!!)
                 SPHERE -> changeToSphere(component, modelComponent, innerWidgetCell!!)
+                CYLINDER -> changeToCylinder(component, modelComponent, innerWidgetCell!!)
                 else -> throw RuntimeException("Unsupported model type!")
             }
         }
@@ -55,6 +59,7 @@ object ComponentWidgetCreator {
         when (component.shapeType) {
             ShapeType.BOX -> boxWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
             ShapeType.SPHERE -> sphereWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
+            ShapeType.CYLINDER -> cylinderWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
             else -> throw RuntimeException("Unsupported model type!")
         }
 
@@ -64,6 +69,7 @@ object ComponentWidgetCreator {
         return when(component.shapeType) {
             ShapeType.BOX -> BOX
             ShapeType.SPHERE -> SPHERE
+            ShapeType.CYLINDER -> CYLINDER
             else -> throw RuntimeException("Unsupported model type!")
         }
     }
@@ -109,5 +115,27 @@ object ComponentWidgetCreator {
 
         sphereWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
     }
+
+    private fun changeToCylinder(
+        component: JoltPhysicsComponent,
+        modelComponent: ModelComponent,
+        innerWidgetCell: RootWidgetCell
+    ) {
+        // Create static cylinder geom
+        val goScale = modelComponent.gameObject.getScale(Vector3())
+        val goPosition = modelComponent.gameObject.getPosition(Vector3())
+        val goRotation = modelComponent.gameObject.getRotation(Quaternion())
+        val boundingBox = modelComponent.orientedBoundingBox.bounds
+        val radius = Math.max(boundingBox.width * goScale.x, boundingBox.depth * goScale.z) / 2.0f
+        val height = boundingBox.height * goScale.y
+
+        val bodyData = JoltPhysicsPlugin.getBodyManager().createCylinderBody(goPosition, radius, height, goRotation)
+        component.shapeType = ShapeType.CYLINDER
+        component.shape = bodyData.shape
+        component.body = bodyData.body
+
+        cylinderWidgetCreator.addWidgets(component, innerWidgetCell.rootWidget)
+    }
+
 
 }

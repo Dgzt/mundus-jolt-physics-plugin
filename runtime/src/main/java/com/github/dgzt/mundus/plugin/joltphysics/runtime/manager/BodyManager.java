@@ -114,6 +114,12 @@ public class BodyManager {
     }
 
     public BodyData createSphereBody(final Vector3 position,
+                                     final float radius,
+                                     final Quaternion quaternion) {
+        return createSphereBody(position, radius, quaternion, PluginConstants.STATIC_OBJECT_MASS);
+    }
+
+    public BodyData createSphereBody(final Vector3 position,
                                  final float radius,
                                  final Quaternion quaternion,
                                  final float mass) {

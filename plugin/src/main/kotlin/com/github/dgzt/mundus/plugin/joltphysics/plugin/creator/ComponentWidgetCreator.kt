@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Array
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.util.GameObjectUtils
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltPhysicsComponent
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.type.ShapeType
 import com.mbrlabs.mundus.commons.scene3d.components.Component
@@ -24,9 +25,9 @@ object ComponentWidgetCreator {
     private val cylinderWidgetCreator = ComponentCylinderWidgetCreator()
     private val capsuleWidgetCreator = ComponentCapsuleWidgetCreator()
 
-    fun setup(component: JoltPhysicsComponent, rootWidget: RootWidget) {
+    fun setup(component: AbstractJoltPhysicsComponent, rootWidget: RootWidget) {
         if (GameObjectUtils.isModelGameObject(component.gameObject)) {
-            setupModelComponentWidget(component, rootWidget)
+            setupModelComponentWidget(component as JoltPhysicsComponent, rootWidget)
         }
     }
 

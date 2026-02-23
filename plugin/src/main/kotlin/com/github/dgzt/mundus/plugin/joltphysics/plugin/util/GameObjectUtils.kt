@@ -21,6 +21,10 @@ object GameObjectUtils {
         return gameObject.findComponentByType<ModelComponent>(Component.Type.MODEL) != null
     }
 
+    fun isWaterGameObject(gameObject: GameObject): Boolean {
+        return gameObject.findComponentByType<ModelComponent>(Component.Type.WATER) != null
+    }
+
     fun hasPhysicsComponent(gameObject: GameObject): Boolean {
         return gameObject.findComponentByType<JoltPhysicsComponent>(Component.Type.PHYSICS) != null
     }

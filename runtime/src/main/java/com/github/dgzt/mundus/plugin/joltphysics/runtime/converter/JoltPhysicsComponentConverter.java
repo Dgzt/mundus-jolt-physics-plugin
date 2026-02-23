@@ -3,6 +3,7 @@ package com.github.dgzt.mundus.plugin.joltphysics.runtime.converter;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltPhysicsComponent;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.SaveConstants;
@@ -24,25 +25,35 @@ public class JoltPhysicsComponentConverter implements CustomComponentConverter {
 
     @Override
     public OrderedMap<String, String> convert(final Component component) {
-        if (!(component instanceof JoltPhysicsComponent)) {
+        if (!(component instanceof AbstractJoltPhysicsComponent)) {
             return null;
         }
-        final JoltPhysicsComponent joltComponent = (JoltPhysicsComponent) component;
+        final AbstractJoltPhysicsComponent abstractJoltComponent = (AbstractJoltPhysicsComponent) component;
+        final ShapeType shapeType = abstractJoltComponent.getShapeType();
 
         final OrderedMap<String, String> map = new OrderedMap<>();
-        map.put(SaveConstants.SHAPE, joltComponent.getShapeType().name());
+        map.put(SaveConstants.SHAPE, shapeType.name());
 
-        if (ShapeType.BOX == joltComponent.getShapeType()) {
-            final BoxShape boxShape = (BoxShape) joltComponent.getShape();
-            final Vec3 halfExtend = boxShape.GetHalfExtent();
+        switch (shapeType) {
+            case TERRAIN:
+            case WATER:
+                // NOOP
+                break;
+            case BOX:
+                final JoltPhysicsComponent joltComponent = (JoltPhysicsComponent) abstractJoltComponent;
+                final BoxShape boxShape = (BoxShape) joltComponent.getShape();
+                final Vec3 halfExtend = boxShape.GetHalfExtent();
 
-            map.put(SaveConstants.BOX_WIDTH, String.valueOf(halfExtend.GetX() * 2f));
-            map.put(SaveConstants.BOX_HEIGHT, String.valueOf(halfExtend.GetY() * 2f));
-            map.put(SaveConstants.BOX_DEPTH, String.valueOf(halfExtend.GetZ() * 2f));
-            if (!joltComponent.isStatic()) {
-                final double mass = joltComponent.getMass();
-                map.put(SaveConstants.BOX_MASS, String.valueOf(mass));
-            }
+                map.put(SaveConstants.BOX_WIDTH, String.valueOf(halfExtend.GetX() * 2f));
+                map.put(SaveConstants.BOX_HEIGHT, String.valueOf(halfExtend.GetY() * 2f));
+                map.put(SaveConstants.BOX_DEPTH, String.valueOf(halfExtend.GetZ() * 2f));
+                if (!joltComponent.isStatic()) {
+                    final double mass = joltComponent.getMass();
+                    map.put(SaveConstants.BOX_MASS, String.valueOf(mass));
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Not supported shape type: " + shapeType);
         }
 
         // TODO sphere
@@ -57,7 +68,7 @@ public class JoltPhysicsComponentConverter implements CustomComponentConverter {
         final ComponentManager componentManager = JoltPhysicsPlugin.getComponentManager();
         final ShapeType shapeType = ShapeType.valueOf(componentProperties.get(SaveConstants.SHAPE));
 
-        final JoltPhysicsComponent physicsComponent;
+        final AbstractJoltPhysicsComponent physicsComponent;
         switch (shapeType) {
             case TERRAIN:
                 if (gameObject.findComponentByType(Component.Type.TERRAIN) == null) {
@@ -65,6 +76,9 @@ public class JoltPhysicsComponentConverter implements CustomComponentConverter {
                 } else {
                     physicsComponent = componentManager.createTerrainPhysicsComponent(gameObject);
                 }
+                break;
+            case WATER:
+                physicsComponent = componentManager.createWaterPhysicsComponent(gameObject);
                 break;
             case BOX:
                 final float boxWidth = Float.parseFloat(componentProperties.get(SaveConstants.BOX_WIDTH));
@@ -79,7 +93,7 @@ public class JoltPhysicsComponentConverter implements CustomComponentConverter {
                 break;
 
             default:
-                throw new RuntimeException("Not supported shape type");
+                throw new UnsupportedOperationException("Not supported shape type: " + shapeType);
         }
 
         // TODO sphere

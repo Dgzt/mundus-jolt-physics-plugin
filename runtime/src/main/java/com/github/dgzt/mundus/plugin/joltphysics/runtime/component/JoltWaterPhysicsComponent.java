@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.collector.WaterCollideShapeBodyCollector;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.type.ShapeType;
 import com.mbrlabs.mundus.commons.scene3d.GameObject;
 import com.mbrlabs.mundus.commons.scene3d.components.Component;
 import com.mbrlabs.mundus.commons.scene3d.components.WaterComponent;
@@ -20,7 +21,7 @@ public class JoltWaterPhysicsComponent extends AbstractJoltPhysicsComponent impl
     private final AABox waterBox;
 
     public JoltWaterPhysicsComponent(final WaterComponent waterComponent) {
-        super(waterComponent.gameObject);
+        super(waterComponent.gameObject, ShapeType.WATER);
 
         final Vec3 surfacePoint = JoltTemp.Vec3_1(0f, waterComponent.gameObject.getPosition(TMP_VECTOR3).y, 0f);
         collector = new WaterCollideShapeBodyCollector(surfacePoint, Vec3.sAxisY());

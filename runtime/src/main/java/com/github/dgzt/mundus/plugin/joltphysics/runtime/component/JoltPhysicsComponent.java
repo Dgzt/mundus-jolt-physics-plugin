@@ -22,7 +22,6 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
     private final Vector3 tempPosition = new Vector3();
     private final Quaternion tempQuat = new Quaternion();
 
-    private ShapeType shapeType;
     // The shape can be null only if game object is terrain and terrain system (parent)
     private Shape shape;
     // The body can be null only if game object is terrain system (parent)
@@ -35,8 +34,7 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
     }
 
     public JoltPhysicsComponent(final GameObject go, final ShapeType shapeType, final Shape shape, final Body body) {
-        super(go);
-        this.shapeType = shapeType;
+        super(go, shapeType);
         this.shape = shape;
         this.body = body;
     }
@@ -84,14 +82,6 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
     public float getMass() {
         final float inverseMass = body.GetMotionProperties().GetInverseMass();
         return (inverseMass != 0.0f) ? (1.0f / inverseMass) : 0.0f;
-    }
-
-    public ShapeType getShapeType() {
-        return shapeType;
-    }
-
-    public void setShapeType(ShapeType shapeType) {
-        this.shapeType = shapeType;
     }
 
     public Shape getShape() {

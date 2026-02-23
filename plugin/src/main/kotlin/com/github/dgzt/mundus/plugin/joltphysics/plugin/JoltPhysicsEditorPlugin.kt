@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Camera
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentCreator
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentWidgetCreator
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltPhysicsComponent
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.converter.JoltPhysicsComponentConverter
@@ -54,7 +55,7 @@ class JoltPhysicsEditorPlugin : Plugin() {
         override fun createComponent(gameObject: GameObject): Component = ComponentCreator.create(gameObject)
 
         override fun setupComponentInspectorWidget(component: Component, rootWidget: RootWidget) =
-            ComponentWidgetCreator.setup(component as JoltPhysicsComponent, rootWidget)
+            ComponentWidgetCreator.setup(component as AbstractJoltPhysicsComponent, rootWidget)
 
         override fun getConverter(): CustomComponentConverter = JoltPhysicsComponentConverter()
     }

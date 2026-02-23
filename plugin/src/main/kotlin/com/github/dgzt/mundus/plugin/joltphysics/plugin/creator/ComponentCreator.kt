@@ -2,14 +2,15 @@ package com.github.dgzt.mundus.plugin.joltphysics.plugin.creator
 
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.util.GameObjectUtils
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltPhysicsComponent
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent
 import com.mbrlabs.mundus.commons.scene3d.GameObject
 
 object ComponentCreator {
 
-    fun create(gameObject: GameObject) : JoltPhysicsComponent {
+    fun create(gameObject: GameObject) : AbstractJoltPhysicsComponent {
         val componentManager = JoltPhysicsPlugin.getComponentManager()
-        val physicsComponent: JoltPhysicsComponent
+        val physicsComponent: AbstractJoltPhysicsComponent
 
         if (GameObjectUtils.isTerrainManagerGameObject(gameObject)) {
             physicsComponent = componentManager.createTerrainSystemPhysicsComponent(gameObject)
@@ -25,6 +26,8 @@ object ComponentCreator {
             physicsComponent = componentManager.createTerrainPhysicsComponent(gameObject)
         } else if (GameObjectUtils.isModelGameObject(gameObject)) {
             physicsComponent = componentManager.createBoxPhysicsComponent(gameObject)
+        } else if (GameObjectUtils.isWaterGameObject(gameObject)) {
+            physicsComponent = componentManager.createWaterPhysicsComponent(gameObject)
         } else {
             throw UnsupportedOperationException("Not supported game object type!")
 

@@ -28,8 +28,8 @@ public class JoltWaterPhysicsComponent extends AbstractJoltPhysicsComponent impl
         final Vector3 center = waterComponent.getCenter();
         final Vector3 dimensions = waterComponent.getDimensions();
 
-        final Vec3 waterBoxMin = JoltTemp.Vec3_1(center.x - dimensions.x / 2f, -100f, center.z - dimensions.z / 2f);
-        final Vec3 waterBoxMax = JoltTemp.Vec3_2(center.x + dimensions.x / 2f, 0f, center.z + dimensions.z / 2f);
+        final Vec3 waterBoxMin = JoltTemp.Vec3_2(center.x - dimensions.x / 2f, -100f, center.z - dimensions.z / 2f);
+        final Vec3 waterBoxMax = JoltTemp.Vec3_3(center.x + dimensions.x / 2f, 0f, center.z + dimensions.z / 2f);
         waterBox = new AABox(waterBoxMin, waterBoxMax);
         waterBox.TranslateVec3(surfacePoint);
     }

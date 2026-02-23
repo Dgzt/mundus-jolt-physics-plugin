@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltPhysicsComponent;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent;
+import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltWaterPhysicsComponent;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.BodyData;
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.model.RayCastResult;
@@ -16,6 +17,7 @@ import com.mbrlabs.mundus.commons.scene3d.GameObject;
 import com.mbrlabs.mundus.commons.scene3d.components.Component;
 import com.mbrlabs.mundus.commons.scene3d.components.ModelComponent;
 import com.mbrlabs.mundus.commons.scene3d.components.TerrainComponent;
+import com.mbrlabs.mundus.commons.scene3d.components.WaterComponent;
 import jolt.RRayCast;
 import jolt.math.Vec3;
 import jolt.physics.body.Body;
@@ -135,6 +137,13 @@ public class ComponentManager implements Disposable {
 
         final BodyData bodyData = bodyManager.createCapsuleBody(goPosition, radius, height, goQuaternion, mass);
         final JoltPhysicsComponent component = new JoltPhysicsComponent(gameObject, ShapeType.CAPSULE, bodyData);
+        addComponent(component);
+        return component;
+    }
+
+    public JoltWaterPhysicsComponent createWaterPhysicsComponent(final GameObject gameObject) {
+        final WaterComponent waterComponent = gameObject.findComponentByType(Component.Type.WATER);
+        final JoltWaterPhysicsComponent component = new JoltWaterPhysicsComponent(waterComponent);
         addComponent(component);
         return component;
     }

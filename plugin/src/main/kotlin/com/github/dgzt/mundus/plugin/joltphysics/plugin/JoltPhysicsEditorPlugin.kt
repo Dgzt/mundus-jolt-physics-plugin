@@ -70,7 +70,7 @@ class JoltPhysicsEditorPlugin : Plugin() {
     }
 
     @Extension
-    class Ode4jDisposeExtension : DisposeExtension {
+    class JoltPhysicsDisposeExtension : DisposeExtension {
         override fun dispose() {
             Gdx.app.log(PluginConstants.LOG_TAG, "Dispose")
             PropertyManager.debugRendererManager.dispose()

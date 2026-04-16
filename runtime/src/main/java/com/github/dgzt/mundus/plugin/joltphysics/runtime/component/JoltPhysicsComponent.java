@@ -73,6 +73,11 @@ public class JoltPhysicsComponent extends AbstractJoltPhysicsComponent implement
     @Override
     public void dispose() {
         JoltPhysicsPlugin.getComponentManager().removeComponent(this);
+        final BodyID bodyID = getBodyID();
+        if (bodyID != null) {
+            JoltPhysicsPlugin.getPhysicsSystem().GetBodyInterface().RemoveBody(bodyID);
+            JoltPhysicsPlugin.getPhysicsSystem().GetBodyInterface().DestroyBody(bodyID);
+        }
     }
 
     public boolean isStatic() {

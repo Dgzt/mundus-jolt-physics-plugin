@@ -4,6 +4,18 @@ A [Jolt Physics](https://github.com/jrouwe/JoltPhysics) plugin for [Mundus Edito
 
 This plugin works only with master version of Mundus.
 
+## Platform status
+
+This plugin uses [Xpe's version of Jolt Physics bindings](https://github.com/xpenatan/xJolt) version [v5.3.0.2](https://github.com/xpenatan/xJolt/releases/tag/5.3.0.2).
+
+
+| Emscripten | Windows | Linux | Mac | Android | iOS |
+|:----------:|:-------:|:-----:|:---:|:-------:|:---:|
+|  ✅         | ✅       |  ✅    |  ✅  | ✅ | ❌ |
+
+* ✅: Have a working build.
+* ❌: Build not ready.
+
 ## Setup for Editor
 
 You need to build the plugin from source code:

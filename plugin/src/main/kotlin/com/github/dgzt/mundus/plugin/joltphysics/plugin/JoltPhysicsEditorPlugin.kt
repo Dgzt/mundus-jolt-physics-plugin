@@ -6,7 +6,6 @@ import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentCreator
 import com.github.dgzt.mundus.plugin.joltphysics.plugin.creator.ComponentWidgetCreator
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.JoltPhysicsPlugin
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.AbstractJoltPhysicsComponent
-import com.github.dgzt.mundus.plugin.joltphysics.runtime.component.JoltPhysicsComponent
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.constant.PluginConstants
 import com.github.dgzt.mundus.plugin.joltphysics.runtime.converter.JoltPhysicsComponentConverter
 import com.mbrlabs.mundus.commons.mapper.CustomComponentConverter
@@ -14,7 +13,6 @@ import com.mbrlabs.mundus.commons.scene3d.GameObject
 import com.mbrlabs.mundus.commons.scene3d.components.Component
 import com.mbrlabs.mundus.pluginapi.ComponentExtension
 import com.mbrlabs.mundus.pluginapi.CustomShaderRenderExtension
-import com.mbrlabs.mundus.pluginapi.DisposeExtension
 import com.mbrlabs.mundus.pluginapi.MenuExtension
 import com.mbrlabs.mundus.pluginapi.ui.RootWidget
 import org.pf4j.Extension
@@ -69,15 +67,12 @@ class JoltPhysicsEditorPlugin : Plugin() {
         }
     }
 
-    @Extension
-    class JoltPhysicsDisposeExtension : DisposeExtension {
-        override fun dispose() {
-            Gdx.app.log(PluginConstants.LOG_TAG, "Dispose")
-            PropertyManager.debugRendererManager.dispose()
-            if (PropertyManager.joltPhysicsLoaded) {
-                JoltPhysicsPlugin.clearWorld()
-                JoltPhysicsPlugin.dispose()
-            }
+    override fun stop() {
+        Gdx.app.log(PluginConstants.LOG_TAG, "Dispose")
+        PropertyManager.debugRendererManager.dispose()
+        if (PropertyManager.joltPhysicsLoaded) {
+            JoltPhysicsPlugin.clearWorld()
+            JoltPhysicsPlugin.dispose()
         }
     }
 }
